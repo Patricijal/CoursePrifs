@@ -36,6 +36,29 @@ public class MenuControl {
                     for (User u : wolt.getAllSystemUsers()) {
                         System.out.println(u);
                     }
+                    break;
+                case 3:
+                    System.out.println("Enter user login:");
+                    input = scanner.nextLine();
+                    for (User u : wolt.getAllSystemUsers()) {
+                        if (u.getLogin().contains(input)) {
+                            System.out.println(u);
+                        }
+                    }
+                    //wolt.getAllSystemUsers().stream().filter(user1 -> user1.getLogin().contains(input)).findFirst().ifPresent(user1 -> {});
+                    break;
+                case 4:
+                    System.out.println("Enter user login:");
+                    input = scanner.nextLine();
+                    for (User u : wolt.getAllSystemUsers()) {
+                        if (u.getLogin().contains(input)) {
+                            System.out.println("Enter data to update: name; surname");
+                            String[] infoUpdate = scanner.nextLine().split(";");
+                            u.setName(infoUpdate[0]);
+                            u.setSurname(infoUpdate[1]);
+                        }
+                    }
+
                 default:
                     System.out.println();
             }
