@@ -4,11 +4,12 @@ import com.example.courseprifs.model.FoodOrder;
 import com.example.courseprifs.model.User;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 // @NoArgsConstructor //lombok annotation to generate a no-argument constructor, null values
-public class Wolt {
+public class Wolt implements Serializable {
     private List<User> allSystemUsers;
     private List<FoodOrder> allOrders;
 

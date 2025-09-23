@@ -38,4 +38,16 @@ public class Utils {
         }
         return wolt;
     }
+
+    public static void writeWoltToFile(Wolt wolt) {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("database.txt")));
+            out.writeObject(wolt);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

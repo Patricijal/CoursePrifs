@@ -26,13 +26,14 @@ public class StartNoGui {
 
             switch (cmd) {
                 case "u":
-                    MenuControl.generateUserMenu(scanner);
+                    MenuControl.generateUserMenu(scanner, wolt);
                     break;
                 case "o":
                     break;
                 case "w":
                     break;
                 case "q":
+                    Utils.writeWoltToFile(wolt);
                     System.out.println("Get lost");
                     break;
                 default:
