@@ -15,7 +15,9 @@ public class MenuControl {
                     Choose and option:
                     1 - create
                     2 - view all users
-                    3 - update
+                    3 - view specific user
+                    4 - update
+                    5 - delete
                     6 - return to main menu
                     """);
             cmd = scanner.nextInt();

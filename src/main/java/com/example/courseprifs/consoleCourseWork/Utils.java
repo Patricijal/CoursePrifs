@@ -2,10 +2,7 @@ package com.example.courseprifs.consoleCourseWork;
 
 import com.example.courseprifs.model.User;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 public class Utils {
     public static void writeUserToFile(User user) {
@@ -20,5 +17,25 @@ public class Utils {
 //       ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(newFileInputStream("o.txt")));
 //        Object o2 = in.readObject();
 //        in.close();
+    }
+
+    public static Wolt getWoltFromFile() {
+        ObjectInputStream in = null;
+        Wolt wolt = null;
+        try {
+            in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("database.txt")));
+            wolt = (Wolt) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return wolt;
     }
 }

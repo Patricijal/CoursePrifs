@@ -9,6 +9,10 @@ public class StartNoGui {
 //                "u - work with users\n"+
 //                "o - work with orders\n");
         var cmd = "";
+        Wolt wolt = Utils.getWoltFromFile();
+        if (wolt == null) {
+            wolt = new Wolt();
+        }
         while (!cmd.equals("q")) {
             System.out.println("""
                     Choose and option:
