@@ -11,4 +11,6 @@ module com.example.courseprifs {
 
     opens com.example.courseprifs to javafx.fxml;
     exports com.example.courseprifs;
+    exports com.example.courseprifs.fxControllers to javafx.fxml;
+    opens com.example.courseprifs.fxControllers to javafx.fxml;
 }

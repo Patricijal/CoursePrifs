@@ -58,7 +58,16 @@ public class MenuControl {
                             u.setSurname(infoUpdate[1]);
                         }
                     }
-
+                case 5:
+                    System.out.println("Enter user login:");
+                    input = scanner.nextLine();
+                    for (User u : wolt.getAllSystemUsers()) {
+                        if (u.getLogin().equals(input)) {
+                            wolt.getAllSystemUsers().remove(u);
+                            break;
+                        }
+                    }
+                    break;
                 default:
                     System.out.println();
             }
