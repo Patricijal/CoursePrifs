@@ -1,4 +1,4 @@
 package com.example.courseprifs.model;
 
-public class Client {
+public class Restaurant {
 }

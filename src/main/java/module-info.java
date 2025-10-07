@@ -2,6 +2,8 @@ module com.example.courseprifs {
     requires javafx.controls;
     requires javafx.fxml;
     requires lombok;
+    requires mysql.connector.j;
+    requires java.sql;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
