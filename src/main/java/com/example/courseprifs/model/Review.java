@@ -18,12 +18,19 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @ManyToOne
+    private BasicUser owner;
+    @ManyToOne
+    private BasicUser feedBackOwner;
 
 //    private Restaurant restaurant;
 //    @OneToOne
-//    private FoodOrder order;
-//    private int rating;
-//    private boolean isVerified;
+    @Transient
+    private FoodOrder order;
+    private int rating;
+    private boolean isVerified;
+
+
 //    @Transient//konv
 //    private List<String> photos;
 //

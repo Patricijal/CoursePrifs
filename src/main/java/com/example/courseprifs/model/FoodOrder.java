@@ -19,12 +19,18 @@ public class FoodOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String title;
     @ManyToOne
-    private BasicUser customer;
+    private BasicUser buyer;
 
-//    @ManyToOne
-//    private Driver driver;
+    @ManyToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cuisine> food;
+
+    @ManyToOne
+    private Driver driver;
+
+    private String title;
+
+
 //    @OneToOne
 //    private Chat chat;
 

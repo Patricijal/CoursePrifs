@@ -89,7 +89,13 @@ public class UserForm implements Initializable {
                     addressField.getText());
             genericHibernate.create(basicUser);
         }
+
+        // Laikinas kodas
+        User user = genericHibernate.getEntityById(User.class, 1);
+        genericHibernate.delete(User.class, 1);
     }
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources){

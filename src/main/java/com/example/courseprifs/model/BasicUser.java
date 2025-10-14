@@ -18,12 +18,11 @@ public class BasicUser extends User{
     protected String address;
 //    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    protected List<Chat> chats;
-    @Transient
-//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<FoodOrder> myOrders;
-    @Transient
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<Review> myReviews;
-    @Transient
+    @OneToMany(mappedBy = "feedBackOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<Review> feedback;
 
     public BasicUser(String login, String password, String name, String surname, String phoneNumber, String address) {
