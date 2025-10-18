@@ -22,11 +22,11 @@ public class Review {
     private BasicUser owner;
     @ManyToOne
     private BasicUser feedBackOwner;
-
-//    private Restaurant restaurant;
-//    @OneToOne
-    @Transient
+    @ManyToOne
+    private Restaurant restaurant;
+    @OneToOne
     private FoodOrder order;
+
     private int rating;
     private boolean isVerified;
 

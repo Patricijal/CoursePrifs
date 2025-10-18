@@ -21,10 +21,11 @@ public class Driver extends BasicUser{
     @OneToMany(mappedBy = "driver", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FoodOrder> myOrders;
 
-//    @Enumerated
+    @Enumerated
     private VehicleType vehicleType;
-//    @OneToMany(mappedBy = "driver", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Chat> chats;
+
+    @OneToMany(mappedBy = "driver", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Chat> chats;
 
 
     public Driver(String login, String password, String name, String surname, String phoneNumber, String address, String license, LocalDate bDate, VehicleType vehicleType) {

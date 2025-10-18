@@ -7,17 +7,19 @@ package com.example.courseprifs.hibernateControl;
 import com.example.courseprifs.model.BasicUser;
 import com.example.courseprifs.model.Cuisine;
 import com.example.courseprifs.model.User;
+import com.example.courseprifs.utils.FxUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaQuery;
+import javafx.scene.control.Alert;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GenericHibernate {
-    EntityManagerFactory entityManagerFactory;
-    EntityManager entityManager;
+    protected EntityManagerFactory entityManagerFactory;
+    protected EntityManager entityManager;
 
     public GenericHibernate(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
@@ -32,6 +34,7 @@ public class GenericHibernate {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             // Klaidos atveju as panaudosiu Alertus
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong on insert");
         } finally {
             if (entityManager != null) entityManager.close();
         }
@@ -45,6 +48,7 @@ public class GenericHibernate {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             // Klaidos atveju as panaudosiu Alertus
+            FxUtils.generateExceptionAlert(e);
         } finally {
             if (entityManager != null) entityManager.close();
         }

@@ -10,26 +10,29 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Chat {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private int id;
-//    @ManyToOne
-//    private BasicUser customer;
-//    @ManyToOne
-//    private Driver driver;
-//    @OneToOne
-//    private FoodOrder order;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @ManyToOne
+    private BasicUser customer;
+    @ManyToOne
+    private Driver driver;
+    @OneToOne
+    private FoodOrder order;
 //    @OneToMany
 //    private List<ChatMessage> messages;
-//    private LocalDateTime createdAt;
-//    private LocalDateTime lastMessageAt;
-//    private boolean isActive;
-//
+
+    private LocalDateTime createdAt;
+    private LocalDateTime lastMessageAt;
+    private boolean isActive;
+
+
 //    public Chat() {
 //        this.messages = new ArrayList<>();
 //        this.createdAt = LocalDateTime.now();

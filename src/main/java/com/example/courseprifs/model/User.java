@@ -37,18 +37,21 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", login='" + login + '\'' +
+//                ", password='" + password + '\'' +
+//                ", name='" + name + '\'' +
+//                ", surname='" + surname + '\'' +
+//                ", phoneNumber='" + phoneNumber + '\'' +
+//                ", dateCreated=" + dateCreated +
+//                ", dateUpdated=" + dateUpdated +
+//                ", isAdmin=" + isAdmin +
+//                '}';
+//    }
+
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", dateCreated=" + dateCreated +
-                ", dateUpdated=" + dateUpdated +
-                ", isAdmin=" + isAdmin +
-                '}';
-    }
+    public String toString() { return "Name: " + name + " Surname: " + surname; }
 }

@@ -20,7 +20,7 @@ public class Cuisine {
     private int id;
 
     @ManyToMany
-    private List<FoodOrder> order;
+    private List<FoodOrder> orders;
 
     private String name;
 }

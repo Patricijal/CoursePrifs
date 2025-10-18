@@ -22,30 +22,18 @@ public class FoodOrder {
     @ManyToOne
     private BasicUser buyer;
 
-    @ManyToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "orders", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cuisine> food;
 
     @ManyToOne
     private Driver driver;
 
-    private String title;
+    @OneToOne
+    private Chat chat;
 
+    @ManyToOne
+    private Restaurant restaurant;
 
-//    @OneToOne
-//    private Chat chat;
-
-//    private Restaurant restaurant;
-//    private List<OrderItem> orderItems;
-//    private OrderStatus status;
-//    private double subtotal;
-//    private double deliveryFee;
-//    private double totalAmount;
-//    private String deliveryAddress;
-//    private String specialInstructions;
-//    private LocalDateTime orderTime;
-//    private LocalDateTime estimatedDeliveryTime;
-//    private LocalDateTime actualDeliveryTime;
-//    private PaymentMethod paymentMethod;
-//    private String trackingNumber;
-
+    private String name;
+    private Double price;
 }

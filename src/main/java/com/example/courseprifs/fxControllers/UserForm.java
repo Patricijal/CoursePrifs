@@ -92,7 +92,7 @@ public class UserForm implements Initializable {
 
         // Laikinas kodas
         User user = genericHibernate.getEntityById(User.class, 1);
-        genericHibernate.delete(User.class, 1);
+//        genericHibernate.delete(User.class, 1);
     }
 
 
