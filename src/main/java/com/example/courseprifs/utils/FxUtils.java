@@ -6,9 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
+// JavaFX dialogs from code makery
 public class FxUtils {
     public static void generateAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
@@ -18,20 +16,14 @@ public class FxUtils {
         alert.showAndWait();
     }
 
-    public static void generateExceptionAlert(Exception e) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    public static void generateExceptionAlert(Alert.AlertType alertType, String headerText, Exception e) {
+        Alert alert = new Alert(alertType);
         alert.setTitle("Exception Dialog");
-        alert.setHeaderText("Look, an Exception Dialog");
-        alert.setContentText("Could not find file blabla.txt!");
-
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        String exceptionText = sw.toString();
+        alert.setHeaderText(headerText);
 
         Label label = new Label("The exception stacktrace was:");
 
-        TextArea textArea = new TextArea(exceptionText);
+        TextArea textArea = new TextArea(e.getMessage());
         textArea.setEditable(false);
         textArea.setWrapText(true);
 

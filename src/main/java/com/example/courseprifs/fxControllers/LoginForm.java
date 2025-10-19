@@ -35,7 +35,6 @@ public class LoginForm {
         User user = customHibernate.getUserByCredentials(loginField.getText(), passwordField.getText());
         if (user != null) {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-form.fxml"));
-            // Noriu cia uzloadint resursus, tame tarpe ir kontroleri MainForm
             Parent parent = fxmlLoader.load();
 
             MainForm mainForm = fxmlLoader.getController();
@@ -43,24 +42,24 @@ public class LoginForm {
 
             Scene scene = new Scene(parent);
             Stage stage = (Stage) loginField.getScene().getWindow();
+            stage.setTitle("Main form");
             stage.setScene(scene);
             stage.show();
         } else {
-            // alertu naudojimas
             FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "User login", "No such user");
         }
     }
 
     public void registerNewUser() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
-        // Noriu cia uzloadint resursus, tame tarpe ir kontroleri MainForm
         Parent parent = fxmlLoader.load();
 
         UserForm userForm = fxmlLoader.getController();
-        userForm.setData(entityManagerFactory);
+        userForm.setData(entityManagerFactory, null, false);
 
         Scene scene = new Scene(parent);
-        Stage stage = new Stage();
+        Stage stage = (Stage) loginField.getScene().getWindow();
+        stage.setTitle("User form");
         stage.setScene(scene);
         stage.show();
     }

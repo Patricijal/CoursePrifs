@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="367.0" prefWidth="634.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.courseprifs.fxControllers.UserForm">
    <children>
-      <Button layoutX="297.0" layoutY="314.0" mnemonicParsing="false" onAction="#createNewUser" text="Save" />
+      <Button layoutX="237.0" layoutY="314.0" mnemonicParsing="false" onAction="#createNewUser" text="Save" />
       <RadioButton fx:id="userRadio" layoutX="41.0" layoutY="22.0" mnemonicParsing="false" onAction="#disableFields" selected="true" text="User">
          <toggleGroup>
             <ToggleGroup fx:id="userType" />
@@ -48,5 +48,6 @@
             <TextField layoutX="26.0" layoutY="106.0" promptText="Rating" />
          </children>
       </AnchorPane>
+      <Button fx:id="updateButton" layoutX="339.0" layoutY="314.0" mnemonicParsing="false" onAction="#updateUser" text="Update" />
    </children>
 </AnchorPane>

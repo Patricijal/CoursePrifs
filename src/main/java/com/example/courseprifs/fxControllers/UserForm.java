@@ -40,13 +40,33 @@ public class UserForm implements Initializable {
     public AnchorPane basicPane;
     public AnchorPane driverPane;
     public AnchorPane restaurantPane;
+    public Button updateButton;
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
+    private User userForUpdate;
+    private boolean isForUpdate;
 
-    public void setData(EntityManagerFactory entityManagerFactory) {
+    public void setData(EntityManagerFactory entityManagerFactory, User user, boolean isForUpdate) {
         this.entityManagerFactory = entityManagerFactory;
         this.genericHibernate = new GenericHibernate(entityManagerFactory);
+        this.userForUpdate = user;
+        this.isForUpdate = isForUpdate;
+        fillUserDataForUpdate();
+    }
+
+    private void fillUserDataForUpdate() {
+        if (userForUpdate != null && isForUpdate) {
+            if (userForUpdate instanceof User) {
+                usernameField.setText(userForUpdate.getLogin());
+                pswField.setText(userForUpdate.getPassword());
+                nameField.setText(userForUpdate.getName());
+                surnameField.setText(userForUpdate.getSurname());
+                phoneNumField.setText(userForUpdate.getPhoneNumber());
+            }
+        } else {
+            updateButton.setVisible(false);
+        }
     }
 
     public void disableFields() {
@@ -91,7 +111,7 @@ public class UserForm implements Initializable {
         }
 
         // Laikinas kodas
-        User user = genericHibernate.getEntityById(User.class, 1);
+//        User user = genericHibernate.getEntityById(User.class, 1);
 //        genericHibernate.delete(User.class, 1);
     }
 
@@ -100,5 +120,8 @@ public class UserForm implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         disableFields();
+    }
+
+    public void updateUser() {
     }
 }

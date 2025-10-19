@@ -33,8 +33,8 @@ public class GenericHibernate {
             entityManager.persist(entity); // INSERT
             entityManager.getTransaction().commit();
         } catch (Exception e) {
-            // Klaidos atveju as panaudosiu Alertus
-            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong on insert");
+//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong on insert");
+            FxUtils.generateExceptionAlert(Alert.AlertType.ERROR, "During INSERT", e);
         } finally {
             if (entityManager != null) entityManager.close();
         }
@@ -47,8 +47,7 @@ public class GenericHibernate {
             entityManager.merge(entity); // UPDATE
             entityManager.getTransaction().commit();
         } catch (Exception e) {
-            // Klaidos atveju as panaudosiu Alertus
-            FxUtils.generateExceptionAlert(e);
+            FxUtils.generateExceptionAlert(Alert.AlertType.ERROR, "During UPDATE", e);
         } finally {
             if (entityManager != null) entityManager.close();
         }
@@ -63,7 +62,7 @@ public class GenericHibernate {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
-            // Klaidos atveju as panaudosiu Alertus
+            FxUtils.generateExceptionAlert(Alert.AlertType.ERROR, "During DELETE", e);
         } finally {
             if (entityManager != null) entityManager.close();
         }
@@ -93,7 +92,7 @@ public class GenericHibernate {
             Query q = entityManager.createQuery(query);
             list = q.getResultList();
         } catch (Exception e) {
-            // Klaidos atveju as panaudosiu Alertus
+            FxUtils.generateExceptionAlert(Alert.AlertType.ERROR, "During Get All Records", e);
         } finally {
             if (entityManager != null) entityManager.close();
         }
