@@ -36,16 +36,16 @@
       </AnchorPane>
       <AnchorPane fx:id="driverPane" layoutX="412.0" layoutY="51.0" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <TextField layoutX="26.0" layoutY="24.0" promptText="License" />
-            <ComboBox layoutX="26.0" layoutY="124.0" prefWidth="150.0" promptText="Vehicle Type" />
-            <DatePicker layoutX="14.0" layoutY="75.0" promptText="Birthday Date" />
+            <TextField fx:id="licenseField" layoutX="26.0" layoutY="24.0" promptText="License" />
+            <ComboBox fx:id="vehicleTypeField" layoutX="26.0" layoutY="124.0" prefWidth="150.0" promptText="Vehicle Type" />
+            <DatePicker fx:id="bDateField" layoutX="14.0" layoutY="75.0" promptText="Birthday Date" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="restaurantPane" layoutX="434.0" layoutY="39.0" prefHeight="200.0" prefWidth="200.0">
          <children>
             <ComboBox layoutX="25.0" layoutY="30.0" prefWidth="150.0" promptText="Dishes" />
-            <TextField layoutX="26.0" layoutY="68.0" promptText="Work hours" />
-            <TextField layoutX="26.0" layoutY="106.0" promptText="Rating" />
+            <TextField fx:id="workHoursField" layoutX="26.0" layoutY="68.0" promptText="Work hours" />
+            <TextField fx:id="ratingField" layoutX="26.0" layoutY="106.0" promptText="Rating" />
          </children>
       </AnchorPane>
       <Button fx:id="updateButton" layoutX="339.0" layoutY="314.0" mnemonicParsing="false" onAction="#updateUser" text="Update" />

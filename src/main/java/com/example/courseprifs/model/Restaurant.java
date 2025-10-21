@@ -28,4 +28,9 @@ public class Restaurant extends BasicUser {
     private String workHours;
     private double rating;
 
+    public Restaurant(String login, String password, String name, String surname, String phoneNumber, String address, String workHours, double rating) {
+        super(login, password, name, surname, phoneNumber, address);
+        this.workHours = workHours;
+        this.rating = rating;
+    }
 }

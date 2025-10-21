@@ -21,7 +21,7 @@ public class Driver extends BasicUser{
     @OneToMany(mappedBy = "driver", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FoodOrder> myOrders;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private VehicleType vehicleType;
 
     @OneToMany(mappedBy = "driver", cascade= CascadeType.ALL, fetch = FetchType.LAZY)

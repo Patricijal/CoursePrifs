@@ -1,8 +1,7 @@
 package com.example.courseprifs.fxControllers;
 
 import com.example.courseprifs.hibernateControl.GenericHibernate;
-import com.example.courseprifs.model.BasicUser;
-import com.example.courseprifs.model.User;
+import com.example.courseprifs.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,6 +40,16 @@ public class UserForm implements Initializable {
     public AnchorPane driverPane;
     public AnchorPane restaurantPane;
     public Button updateButton;
+    @FXML
+    public TextField licenseField;
+    @FXML
+    public ComboBox<VehicleType> vehicleTypeField;
+    @FXML
+    public DatePicker bDateField;
+    @FXML
+    public TextField workHoursField;
+    @FXML
+    public TextField ratingField;
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
@@ -80,8 +89,8 @@ public class UserForm implements Initializable {
         commonPane.setDisable(false);
 
         // Basic (client) pane visible for client and driver (since driver extends basic user)
-        basicPane.setVisible(isClient || isDriver);
-        basicPane.setDisable(!(isClient || isDriver));
+        basicPane.setVisible(isClient || isDriver || isRestaurant);
+        basicPane.setDisable(!(isClient || isDriver || isRestaurant));
 
         // Driver pane only for driver
         driverPane.setVisible(isDriver);
@@ -108,6 +117,27 @@ public class UserForm implements Initializable {
                     phoneNumField.getText(),
                     addressField.getText());
             genericHibernate.create(basicUser);
+        } else if (driverRadio.isSelected()) {
+            Driver driver = new Driver(usernameField.getText(),
+                    pswField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumField.getText(),
+                    addressField.getText(),
+                    licenseField.getText(),
+                    bDateField.getValue(),
+                    vehicleTypeField.getSelectionModel().getSelectedItem());
+            genericHibernate.create(driver);
+        } else if (restaurantRadio.isSelected()) {
+            Restaurant restaurant = new Restaurant(usernameField.getText(),
+                    pswField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumField.getText(),
+                    addressField.getText(),
+                    workHoursField.getText(),
+                    Double.parseDouble(ratingField.getText()));
+            genericHibernate.create(restaurant);
         }
 
         // Laikinas kodas
@@ -119,6 +149,7 @@ public class UserForm implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
+        vehicleTypeField.getItems().setAll(VehicleType.values());
         disableFields();
     }
 
