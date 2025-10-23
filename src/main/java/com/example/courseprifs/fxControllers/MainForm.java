@@ -2,47 +2,61 @@ package com.example.courseprifs.fxControllers;
 
 import com.example.courseprifs.HelloApplication;
 import com.example.courseprifs.hibernateControl.CustomHibernate;
-import com.example.courseprifs.model.FoodOrder;
-import com.example.courseprifs.model.Restaurant;
-import com.example.courseprifs.model.User;
+import com.example.courseprifs.hibernateControl.GenericHibernate;
+import com.example.courseprifs.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class MainForm {
+public class MainForm implements Initializable {
     @FXML
     public Tab userTab;
     @FXML
-    public Tab managementTab;
+    public Tab orderTab;
     @FXML
-    public Tab foodTab;
+    public Tab cuisineTab;
     @FXML // laikinas
     public Tab altTab;
     @FXML
     public ListView<User> userListField;
     @FXML
     public TabPane tabsPane;
+    @FXML
+    public Tab chatTab;
+    @FXML
+    public Tab reviewTab;
+    @FXML
+    public ListView<Cuisine> cuisineListField;
+    @FXML
+    public TextField cuisineTitleField;
+    @FXML
+    public TextArea cuisineDescriptionField;
+    @FXML
+    public ComboBox<Allergens> cuisineAllergensField;
 
     private EntityManagerFactory entityManagerFactory;
     private CustomHibernate customHibernate;
     private User currentUser;
+    private GenericHibernate genericHibernate;
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;
         this.currentUser = user;
         this.customHibernate = new CustomHibernate(entityManagerFactory);
+        this.genericHibernate = new GenericHibernate(entityManagerFactory);
         setUserFormVisibility();
     }
 
@@ -57,11 +71,18 @@ public class MainForm {
     public void reloadTableData() {
         if (userTab.isSelected()) {
 
-        } else if (managementTab.isSelected()) {
+        } else if (orderTab.isSelected()) {
             List<FoodOrder> foodOrders = getFoodOrders();
-        } else if (foodTab.isSelected()) {
+        } else if (cuisineTab.isSelected()) {
+            cuisineListField.getItems().clear();
+            List<Cuisine> cuisineList = customHibernate.getAllRecords(Cuisine.class);
+            cuisineListField.getItems().addAll(cuisineList);
+        } else if (chatTab.isSelected()) {
+
+        } else if (reviewTab.isSelected()) {
 
         } else if (altTab.isSelected()) {
+            userListField.getItems().clear();
             List<User> userList = customHibernate.getAllRecords(User.class);
             userListField.getItems().addAll(userList);
         }
@@ -75,7 +96,7 @@ public class MainForm {
         }
     }
 
-    //<editor-fold desc="Alternative Tab Functions">
+    //<editor-fold desc="Alternative User Management Tab Functions">
     public void addUser() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
         Parent parent = fxmlLoader.load();
@@ -111,6 +132,31 @@ public class MainForm {
     public void deleteUser() {
         User selectedUser = userListField.getSelectionModel().getSelectedItem();
         customHibernate.delete(User.class, selectedUser.getId());
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Cuisine Management Tab Functions">
+    public void addCuisine() {
+        Cuisine cuisine = new Cuisine(cuisineTitleField.getText(),
+                cuisineDescriptionField.getText(),
+                cuisineAllergensField.getSelectionModel().getSelectedItem());
+        genericHibernate.create(cuisine);
+    }
+
+    public void updateCuisine() {
+        Cuisine cuisine = cuisineListField.getSelectionModel().getSelectedItem();
+        cuisine.setTitle(cuisineTitleField.getText());
+        cuisine.setDescription(cuisineDescriptionField.getText());
+        cuisine.setAllergens(cuisineAllergensField.getSelectionModel().getSelectedItem());
+        genericHibernate.update(cuisine);
+    }
+
+    public void deleteCuisine() {
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        cuisineAllergensField.getItems().setAll(Allergens.values());
     }
     //</editor-fold>
 }

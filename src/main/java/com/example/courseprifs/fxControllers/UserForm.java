@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -50,6 +51,7 @@ public class UserForm implements Initializable {
     public TextField workHoursField;
     @FXML
     public TextField ratingField;
+    public Button saveButton;
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
@@ -66,14 +68,51 @@ public class UserForm implements Initializable {
 
     private void fillUserDataForUpdate() {
         if (userForUpdate != null && isForUpdate) {
-            if (userForUpdate instanceof User) {
-                usernameField.setText(userForUpdate.getLogin());
-                pswField.setText(userForUpdate.getPassword());
-                nameField.setText(userForUpdate.getName());
-                surnameField.setText(userForUpdate.getSurname());
-                phoneNumField.setText(userForUpdate.getPhoneNumber());
+            // --- Common fields for all user types ---
+            usernameField.setText(userForUpdate.getLogin());
+            pswField.setText(userForUpdate.getPassword());
+            nameField.setText(userForUpdate.getName());
+            surnameField.setText(userForUpdate.getSurname());
+            phoneNumField.setText(userForUpdate.getPhoneNumber());
+
+            // --- Subclass-specific fields ---
+            if (userForUpdate instanceof BasicUser basicUser) {
+                addressField.setText(basicUser.getAddress());
             }
+
+            if (userForUpdate instanceof Driver driver) {
+                addressField.setText(driver.getAddress());
+                licenseField.setText(driver.getLicense());
+                bDateField.setValue(driver.getBDate());
+                vehicleTypeField.setValue(driver.getVehicleType());
+            }
+
+            if (userForUpdate instanceof Restaurant restaurant) {
+                addressField.setText(restaurant.getAddress());
+                workHoursField.setText(restaurant.getWorkHours());
+                ratingField.setText(String.valueOf(restaurant.getRating()));
+            }
+
+            // --- Auto-select correct user type radio ---
+            if (userForUpdate instanceof Driver) {
+                driverRadio.setSelected(true);
+            } else if (userForUpdate instanceof Restaurant) {
+                restaurantRadio.setSelected(true);
+            } else if (userForUpdate instanceof BasicUser) {
+                clientRadio.setSelected(true);
+            } else {
+                userRadio.setSelected(true);
+            }
+
+            // Update visible panes accordingly
+            disableFields();
+
+            // Make sure update button is visible
+            updateButton.setVisible(true);
+            saveButton.setVisible(false);
+
         } else {
+            // If not updating, hide the update button
             updateButton.setVisible(false);
         }
     }
@@ -154,5 +193,40 @@ public class UserForm implements Initializable {
     }
 
     public void updateUser() {
+        // Common fields (shared by all subclasses)
+        userForUpdate.setLogin(usernameField.getText());
+        userForUpdate.setPassword(pswField.getText());
+        userForUpdate.setName(nameField.getText());
+        userForUpdate.setSurname(surnameField.getText());
+        userForUpdate.setPhoneNumber(phoneNumField.getText());
+
+        // Type-specific fields
+        if (userForUpdate instanceof BasicUser basicUser) {
+            basicUser.setAddress(addressField.getText());
+        }
+
+        if (userForUpdate instanceof Driver driver) {
+            driver.setAddress(addressField.getText());
+            driver.setLicense(licenseField.getText());
+            driver.setBDate(bDateField.getValue());
+            driver.setVehicleType(vehicleTypeField.getSelectionModel().getSelectedItem());
+        }
+
+        if (userForUpdate instanceof Restaurant restaurant) {
+            restaurant.setAddress(addressField.getText());
+            restaurant.setWorkHours(workHoursField.getText());
+            try {
+                restaurant.setRating(Double.parseDouble(ratingField.getText()));
+            } catch (NumberFormatException e) {
+                restaurant.setRating(0.0); // default if invalid input
+            }
+        }
+
+        // Save the updated object
+        genericHibernate.update(userForUpdate);
+
+        // Close the form
+        Stage stage = (Stage) updateButton.getScene().getWindow();
+        stage.close();
     }
 }

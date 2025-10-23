@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Cuisine {
-    // food order many to many
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -22,5 +21,17 @@ public class Cuisine {
     @ManyToMany
     private List<FoodOrder> orders;
 
-    private String name;
+    private String title;
+    private String description;
+    @Enumerated(EnumType.STRING)
+    private Allergens allergens;
+
+    public Cuisine(String title, String description, Allergens allergens) {
+        this.title = title;
+        this.description = description;
+        this.allergens = allergens;
+    }
+
+    @Override
+    public String toString() { return "Title: " + title + "Description: " + description + "Allergens: " + allergens; }
 }
