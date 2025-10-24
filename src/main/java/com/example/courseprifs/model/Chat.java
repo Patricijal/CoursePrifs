@@ -31,23 +31,4 @@ public class Chat {
     private LocalDateTime createdAt;
     private LocalDateTime lastMessageAt;
     private boolean isActive;
-
-
-//    public Chat() {
-//        this.messages = new ArrayList<>();
-//        this.createdAt = LocalDateTime.now();
-//        this.isActive = true;
-//    }
-//
-//    public Chat(BasicUser customer, Driver driver, FoodOrder order) {
-//        this();
-//        this.customer = customer;
-//        this.driver = driver;
-//        this.order = order;
-//    }
-//
-//    public void addMessage(ChatMessage message) {
-//        this.messages.add(message);
-//        this.lastMessageAt = message.getTimestamp();
-//    }
 }

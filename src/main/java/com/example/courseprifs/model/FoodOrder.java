@@ -36,4 +36,15 @@ public class FoodOrder {
 
     private String name;
     private Double price;
+
+    public FoodOrder(String name, Double price) {
+        this.food =  new ArrayList<>();
+        this.name = name;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Order: " + name + " | Price: " + price;
+    }
 }

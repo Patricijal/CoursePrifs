@@ -25,13 +25,15 @@ public class Cuisine {
     private String description;
     @Enumerated(EnumType.STRING)
     private Allergens allergens;
+    private double price;
 
-    public Cuisine(String title, String description, Allergens allergens) {
+    public Cuisine(String title, String description, Allergens allergens, double price) {
         this.title = title;
         this.description = description;
         this.allergens = allergens;
+        this.price = price;
     }
 
     @Override
-    public String toString() { return "Title: " + title + "Description: " + description + "Allergens: " + allergens; }
+    public String toString() { return "Title: " + title + " | Description: " + description + " | Allergens: " + allergens + " | Price: " + price; }
 }

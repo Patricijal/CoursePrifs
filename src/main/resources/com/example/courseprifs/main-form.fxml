@@ -39,10 +39,13 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView layoutX="21.0" layoutY="24.0" prefHeight="357.0" prefWidth="277.0" />
-                        <TextField layoutX="328.0" layoutY="24.0" />
-                        <TextArea layoutX="328.0" layoutY="68.0" prefHeight="200.0" prefWidth="200.0" />
-                        <ComboBox layoutX="328.0" layoutY="292.0" prefWidth="150.0" />
+                        <ListView fx:id="orderListField" layoutX="21.0" layoutY="15.0" prefHeight="374.0" prefWidth="418.0" />
+                        <TextField fx:id="orderNameField" layoutX="490.0" layoutY="24.0" promptText="Order name" />
+                        <ComboBox fx:id="orderCuisineField" layoutX="490.0" layoutY="123.0" prefWidth="150.0" promptText="Cuisine" />
+                        <TextField fx:id="orderPriceField" layoutX="490.0" layoutY="72.0" promptText="Price" />
+                        <Button layoutX="469.0" layoutY="355.0" mnemonicParsing="false" onAction="#addOrder" text="Add" />
+                        <Button layoutX="537.0" layoutY="355.0" mnemonicParsing="false" onAction="#updateOrder" text="Update" />
+                        <Button layoutX="615.0" layoutY="355.0" mnemonicParsing="false" onAction="#deleteOrder" text="Delete" />
                      </children></AnchorPane>
               </content>
             </Tab>
@@ -50,24 +53,40 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="cuisineListField" layoutX="14.0" layoutY="14.0" prefHeight="352.0" prefWidth="305.0" />
-                        <TextField fx:id="cuisineTitleField" layoutX="350.0" layoutY="22.0" promptText="Title" />
-                        <TextArea fx:id="cuisineDescriptionField" layoutX="350.0" layoutY="66.0" prefHeight="200.0" prefWidth="200.0" promptText="Description" />
-                        <ComboBox fx:id="cuisineAllergensField" layoutX="350.0" layoutY="290.0" prefWidth="150.0" promptText="Allergens" />
-                        <Button layoutX="350.0" layoutY="354.0" mnemonicParsing="false" onAction="#addCuisine" text="Add" />
-                        <Button layoutX="478.0" layoutY="353.0" mnemonicParsing="false" onAction="#updateCuisine" text="Update" />
-                        <Button layoutX="604.0" layoutY="354.0" mnemonicParsing="false" onAction="#deleteCuisine" text="Delete" />
+                        <ListView fx:id="cuisineListField" layoutX="14.0" layoutY="14.0" prefHeight="374.0" prefWidth="445.0" />
+                        <TextField fx:id="cuisineTitleField" layoutX="475.0" layoutY="20.0" prefHeight="25.0" prefWidth="200.0" promptText="Title" />
+                        <TextArea fx:id="cuisineDescriptionField" layoutX="475.0" layoutY="54.0" prefHeight="200.0" prefWidth="200.0" promptText="Description" />
+                        <ComboBox fx:id="cuisineAllergensField" layoutX="475.0" layoutY="263.0" prefHeight="25.0" prefWidth="199.0" promptText="Allergens" />
+                        <Button layoutX="476.0" layoutY="354.0" mnemonicParsing="false" onAction="#addCuisine" text="Add" />
+                        <Button layoutX="547.0" layoutY="354.0" mnemonicParsing="false" onAction="#updateCuisine" text="Update" />
+                        <Button layoutX="623.0" layoutY="354.0" mnemonicParsing="false" onAction="#deleteCuisine" text="Delete" />
+                        <TextField fx:id="cuisinePriceField" layoutX="476.0" layoutY="302.0" prefHeight="25.0" prefWidth="198.0" promptText="Price" />
                      </children></AnchorPane>
               </content>
             </Tab>
             <Tab fx:id="chatTab" onSelectionChanged="#reloadTableData" text="Chat">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView layoutX="23.0" layoutY="23.0" prefHeight="365.0" prefWidth="358.0" />
+                        <Button layoutX="435.0" layoutY="363.0" mnemonicParsing="false" text="Add" />
+                        <Button layoutX="524.0" layoutY="363.0" mnemonicParsing="false" text="Update" />
+                        <Button layoutX="616.0" layoutY="363.0" mnemonicParsing="false" text="Delete" />
+                        <ComboBox layoutX="435.0" layoutY="23.0" prefWidth="150.0" promptText="Message" />
+                     </children></AnchorPane>
               </content>
             </Tab>
             <Tab fx:id="reviewTab" onSelectionChanged="#reloadTableData" text="Review">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="reviewListField" layoutX="21.0" layoutY="20.0" prefHeight="365.0" prefWidth="412.0" />
+                        <TextField fx:id="reviewRatingField" layoutX="462.0" layoutY="20.0" prefHeight="25.0" prefWidth="198.0" promptText="Rating" />
+                        <TextArea fx:id="reviewCommentField" layoutX="461.0" layoutY="57.0" prefHeight="274.0" prefWidth="200.0" promptText="Comment" />
+                        <Button layoutX="461.0" layoutY="359.0" mnemonicParsing="false" onAction="#addReview" text="Add" />
+                        <Button layoutX="533.0" layoutY="359.0" mnemonicParsing="false" onAction="#updateReview" text="Update" />
+                        <Button layoutX="610.0" layoutY="359.0" mnemonicParsing="false" onAction="#deleteReview" text="Delete" />
+                     </children></AnchorPane>
               </content>
             </Tab>
             <Tab fx:id="altTab" onSelectionChanged="#reloadTableData" text="Alternative user management">

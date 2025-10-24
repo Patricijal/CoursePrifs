@@ -46,6 +46,22 @@ public class MainForm implements Initializable {
     public TextArea cuisineDescriptionField;
     @FXML
     public ComboBox<Allergens> cuisineAllergensField;
+    @FXML
+    public TextField cuisinePriceField;
+    @FXML
+    public ListView<Review> reviewListField;
+    @FXML
+    public TextField reviewRatingField;
+    @FXML
+    public TextArea reviewCommentField;
+    @FXML
+    public ListView<FoodOrder> orderListField;
+    @FXML
+    public TextField orderNameField;
+    @FXML
+    public ComboBox<Cuisine> orderCuisineField;
+    @FXML
+    public TextField orderPriceField;
 
     private EntityManagerFactory entityManagerFactory;
     private CustomHibernate customHibernate;
@@ -72,7 +88,11 @@ public class MainForm implements Initializable {
         if (userTab.isSelected()) {
 
         } else if (orderTab.isSelected()) {
+            orderListField.getItems().clear();
             List<FoodOrder> foodOrders = getFoodOrders();
+            orderListField.getItems().addAll(foodOrders);
+
+            loadCuisinesForOrders();
         } else if (cuisineTab.isSelected()) {
             cuisineListField.getItems().clear();
             List<Cuisine> cuisineList = customHibernate.getAllRecords(Cuisine.class);
@@ -85,6 +105,13 @@ public class MainForm implements Initializable {
             userListField.getItems().clear();
             List<User> userList = customHibernate.getAllRecords(User.class);
             userListField.getItems().addAll(userList);
+        }
+    }
+
+    private void loadCuisinesForOrders() {
+        if (entityManagerFactory != null && customHibernate != null) {
+            List<Cuisine> cuisineList = customHibernate.getAllRecords(Cuisine.class);
+            orderCuisineField.getItems().setAll(cuisineList);
         }
     }
 
@@ -125,7 +152,7 @@ public class MainForm implements Initializable {
         Scene scene = new Scene(parent);
         stage.setTitle("User form");
         stage.setScene(scene);
-        stage.initModality(Modality.APPLICATION_MODAL); // modaliskumas - neleidzia atidaryti pasikartojanciu langu
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
     }
 
@@ -139,7 +166,8 @@ public class MainForm implements Initializable {
     public void addCuisine() {
         Cuisine cuisine = new Cuisine(cuisineTitleField.getText(),
                 cuisineDescriptionField.getText(),
-                cuisineAllergensField.getSelectionModel().getSelectedItem());
+                cuisineAllergensField.getSelectionModel().getSelectedItem(),
+                Double.parseDouble(cuisinePriceField.getText()));
         genericHibernate.create(cuisine);
     }
 
@@ -148,15 +176,57 @@ public class MainForm implements Initializable {
         cuisine.setTitle(cuisineTitleField.getText());
         cuisine.setDescription(cuisineDescriptionField.getText());
         cuisine.setAllergens(cuisineAllergensField.getSelectionModel().getSelectedItem());
+        try {
+            cuisine.setPrice(Double.parseDouble(cuisinePriceField.getText()));
+        } catch (NumberFormatException e) {
+            cuisine.setPrice(0.0); // default if invalid input
+        }
         genericHibernate.update(cuisine);
     }
 
     public void deleteCuisine() {
+        Cuisine selectedCuisine = cuisineListField.getSelectionModel().getSelectedItem();
+        genericHibernate.delete(Cuisine.class, selectedCuisine.getId());
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Review Tab Functions">
+    public void addReview() {
+    }
+
+    public void updateReview() {
+    }
+
+    public void deleteReview() {
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Order Management Tab Functions">
+    public void addOrder() {
+        FoodOrder order = new FoodOrder(orderNameField.getText(),
+                Double.parseDouble(orderPriceField.getText()));
+        genericHibernate.create(order);
+    }
+
+    public void updateOrder() {
+        FoodOrder order = orderListField.getSelectionModel().getSelectedItem();
+        order.setName(orderNameField.getText());
+        try {
+            order.setPrice(Double.parseDouble(orderPriceField.getText()));
+        } catch (NumberFormatException e) {
+            order.setPrice(0.0); // default if invalid input
+        }
+        genericHibernate.update(order);
+    }
+
+    public void deleteOrder() {
+        FoodOrder selectedOrder = orderListField.getSelectionModel().getSelectedItem();
+        genericHibernate.delete(FoodOrder.class, selectedOrder.getId());
+    }
+    //</editor-fold>
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cuisineAllergensField.getItems().setAll(Allergens.values());
     }
-    //</editor-fold>
 }
