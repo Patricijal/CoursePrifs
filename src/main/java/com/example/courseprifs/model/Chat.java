@@ -23,10 +23,10 @@ public class Chat {
     private BasicUser customer;
     @ManyToOne
     private Driver driver;
-    @OneToOne
+    @OneToOne(mappedBy = "chat", cascade = CascadeType.ALL)
     private FoodOrder order;
-//    @OneToMany
-//    private List<ChatMessage> messages;
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Review> messages;
 
     private LocalDateTime createdAt;
     private LocalDateTime lastMessageAt;

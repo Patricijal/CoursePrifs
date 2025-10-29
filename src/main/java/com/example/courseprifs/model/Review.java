@@ -26,6 +26,8 @@ public class Review {
     private Restaurant restaurant;
     @OneToOne
     private FoodOrder order;
+    @ManyToOne
+    private Chat chat;
 
     private int rating;
     private String text;

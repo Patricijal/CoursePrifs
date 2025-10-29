@@ -5,8 +5,6 @@ import com.example.courseprifs.hibernateControl.CustomHibernate;
 import com.example.courseprifs.hibernateControl.GenericHibernate;
 import com.example.courseprifs.model.*;
 import jakarta.persistence.EntityManagerFactory;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,13 +29,30 @@ public class MainForm implements Initializable {
     @FXML // laikinas
     public Tab altTab;
     @FXML
-    public ListView<User> userListField;
-    @FXML
-    public TabPane tabsPane;
-    @FXML
     public Tab chatTab;
     @FXML
     public Tab reviewTab;
+    @FXML
+    public TabPane tabsPane;
+
+    @FXML
+    public ListView<User> userListField;
+
+    @FXML
+    public TextField orderNameField;
+    @FXML
+    public TextField orderPriceField;
+    @FXML
+    public ListView<FoodOrder> orderListField;
+    @FXML
+    public ComboBox<Cuisine> orderCuisineField;
+    @FXML
+    public ComboBox<BasicUser> orderClientList;
+    @FXML
+    public ComboBox<Restaurant> orderRestaurantList;
+    @FXML
+    public ComboBox<OrderStatus> orderStatusField;
+
     @FXML
     public ListView<Cuisine> cuisineListField;
     @FXML
@@ -54,14 +69,8 @@ public class MainForm implements Initializable {
     public TextField reviewRatingField;
     @FXML
     public TextArea reviewCommentField;
-    @FXML
-    public ListView<FoodOrder> orderListField;
-    @FXML
-    public TextField orderNameField;
-    @FXML
-    public ComboBox<Cuisine> orderCuisineField;
-    @FXML
-    public TextField orderPriceField;
+
+    public ListView<BasicUser> basicUserList;
 
     private EntityManagerFactory entityManagerFactory;
     private CustomHibernate customHibernate;
@@ -81,17 +90,27 @@ public class MainForm implements Initializable {
             // custom
         } else if (currentUser instanceof Restaurant) {
             tabsPane.getTabs().remove(altTab); // wont even generate tab
+        } else if (currentUser instanceof Driver) {
+
         }
     }
 
+    //<editor-fold desc="User Tab functionality">
     public void reloadTableData() {
         if (userTab.isSelected()) {
-
+            // table view
         } else if (orderTab.isSelected()) {
-            orderListField.getItems().clear();
+            clearAllFields();
             List<FoodOrder> foodOrders = getFoodOrders();
             orderListField.getItems().addAll(foodOrders);
 
+            // double check kodel rodo per daug vartotoju
+            orderClientList.getItems().addAll(customHibernate.getAllRecords(BasicUser.class));
+            // jei dirbsit su listview
+            basicUserList.getItems().addAll(customHibernate.getAllRecords(BasicUser.class));
+
+            orderRestaurantList.getItems().addAll(customHibernate.getAllRecords(Restaurant.class));
+            orderStatusField.getItems().addAll(OrderStatus.values());
             loadCuisinesForOrders();
         } else if (cuisineTab.isSelected()) {
             cuisineListField.getItems().clear();
@@ -108,6 +127,16 @@ public class MainForm implements Initializable {
         }
     }
 
+    private void clearAllFields() {
+        orderListField.getItems().clear();
+        basicUserList.getItems().clear();
+        orderClientList.getItems().clear();
+        orderRestaurantList.getItems().clear();
+        orderNameField.clear();
+        orderPriceField.clear();
+    }
+    //</editor-fold>
+
     private void loadCuisinesForOrders() {
         if (entityManagerFactory != null && customHibernate != null) {
             List<Cuisine> cuisineList = customHibernate.getAllRecords(Cuisine.class);
@@ -115,13 +144,6 @@ public class MainForm implements Initializable {
         }
     }
 
-    private List<FoodOrder> getFoodOrders() {
-        if (currentUser instanceof Restaurant) {
-            return customHibernate.getRestaurantOrders((Restaurant) currentUser);
-        } else {
-            return customHibernate.getAllRecords(FoodOrder.class);
-        }
-    }
 
     //<editor-fold desc="Alternative User Management Tab Functions">
     public void addUser() throws IOException {
@@ -202,10 +224,39 @@ public class MainForm implements Initializable {
     //</editor-fold>
 
     //<editor-fold desc="Order Management Tab Functions">
-    public void addOrder() {
-        FoodOrder order = new FoodOrder(orderNameField.getText(),
-                Double.parseDouble(orderPriceField.getText()));
-        genericHibernate.create(order);
+    private List<FoodOrder> getFoodOrders() {
+        if (currentUser instanceof Restaurant) {
+            return customHibernate.getRestaurantOrders((Restaurant) currentUser);
+        } else {
+            return customHibernate.getAllRecords(FoodOrder.class);
+        }
+    }
+
+    private boolean isNumeric(String text) {
+        try {
+            Double.parseDouble(text);
+            return true;
+        }  catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public void createOrder() {
+        if (isNumeric(orderPriceField.getText())) {
+            FoodOrder order = new FoodOrder(orderNameField.getText(),
+                    Double.parseDouble(orderPriceField.getText()),
+                    orderClientList.getValue(),
+                    orderRestaurantList.getValue());
+            genericHibernate.create(order);
+
+            // Alternatyvus budas:
+//            FoodOrder order2 = new FoodOrder(orderNameField.getText(),
+//                    Double.parseDouble(orderPriceField.getText()),
+//                    basicUserList.getSelectionModel().getSelectedItem(),
+//                    orderRestaurantList.getValue());
+//            genericHibernate.create(order2);
+            fillOrderList();
+        }
     }
 
     public void updateOrder() {
@@ -216,12 +267,58 @@ public class MainForm implements Initializable {
         } catch (NumberFormatException e) {
             order.setPrice(0.0); // default if invalid input
         }
+        order.setBuyer(orderClientList.getSelectionModel().getSelectedItem());
+        order.setRestaurant(orderRestaurantList.getSelectionModel().getSelectedItem());
+        order.setOrderStatus(orderStatusField.getValue());
         genericHibernate.update(order);
+        fillOrderList();
     }
 
     public void deleteOrder() {
         FoodOrder selectedOrder = orderListField.getSelectionModel().getSelectedItem();
         genericHibernate.delete(FoodOrder.class, selectedOrder.getId());
+        fillOrderList();
+    }
+
+    private void fillOrderList() {
+        orderListField.getItems().clear();
+        orderListField.getItems().addAll(customHibernate.getAllRecords(FoodOrder.class));
+    }
+
+    public void loadOrderInfo() {
+        // not optimal, code duplication
+        FoodOrder selectedOrder = orderListField.getSelectionModel().getSelectedItem();
+        orderNameField.setText(selectedOrder.getName());
+        orderPriceField.setText(selectedOrder.getPrice().toString());
+
+        orderClientList.getItems().stream()
+                .filter(c -> c.getId() == selectedOrder.getBuyer().getId())
+                .findFirst()
+                .ifPresent(u -> orderClientList.getSelectionModel().select(u));
+
+        basicUserList.getItems().stream()
+                .filter(c -> c.getId() == selectedOrder.getBuyer().getId())
+                .findFirst()
+                .ifPresent(u -> basicUserList.getSelectionModel().select(u));
+
+        orderRestaurantList.getItems().stream()
+                .filter(r -> r.getId() == selectedOrder.getRestaurant().getId())
+                .findFirst()
+                .ifPresent(u -> orderRestaurantList.getSelectionModel().select(u));
+
+//        orderStatusField.getItems().stream()
+//                .filter(s -> s.equals(orderStatusField.getValue()))
+//                .anyMatch(s -> s.equals("COMPLETED"));
+        disableFoodOrderFields();
+    }
+
+    private void disableFoodOrderFields() {
+        if (orderStatusField.getSelectionModel().getSelectedItem() == OrderStatus.COMPLETED){
+            orderNameField.setDisable(true);
+            orderPriceField.setDisable(true);
+            orderClientList.setDisable(true);
+            orderRestaurantList.setDisable(true);
+        }
     }
     //</editor-fold>
 

@@ -1,9 +1,6 @@
 package com.example.courseprifs.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Restaurant extends BasicUser {
-    @OneToMany
+//    @OneToMany
+    @Transient
     private List<Cuisine> menuItems;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;

@@ -14,8 +14,6 @@ module com.example.courseprifs {
     requires java.desktop;
 //    requires com.example.courseprifs;
     requires javafx.graphics;
-//    requires com.example.courseprifs;
-    //requires com.example.courseprifs;
 
     opens com.example.courseprifs to javafx.fxml, org.hibernate.orm.core, jakarta.persistence;
     exports com.example.courseprifs;
