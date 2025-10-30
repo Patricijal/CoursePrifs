@@ -18,6 +18,8 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private int rating;
+    private String text;
     @ManyToOne
     private BasicUser owner;
     @ManyToOne
@@ -28,9 +30,6 @@ public class Review {
     private FoodOrder order;
     @ManyToOne
     private Chat chat;
-
-    private int rating;
-    private String text;
 
     public Review(int rating, String text) {
         this.rating = rating;

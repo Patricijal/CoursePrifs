@@ -15,8 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Restaurant extends BasicUser {
-//    @OneToMany
-    @Transient
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cuisine> menuItems;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
@@ -24,9 +23,9 @@ public class Restaurant extends BasicUser {
     private List<FoodOrder> MyOrders;
 
     private String workHours;
-    private double rating;
+    private Double rating;
 
-    public Restaurant(String login, String password, String name, String surname, String phoneNumber, String address, String workHours, double rating) {
+    public Restaurant(String login, String password, String name, String surname, String phoneNumber, String address, String workHours, Double rating) {
         super(login, password, name, surname, phoneNumber, address);
         this.workHours = workHours;
         this.rating = rating;

@@ -5,11 +5,10 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="317.0" prefWidth="476.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.courseprifs.fxControllers.ChatForm">
+<AnchorPane prefHeight="329.0" prefWidth="476.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.courseprifs.fxControllers.ChatForm">
    <children>
-      <ListView fx:id="messageList" layoutX="61.0" layoutY="25.0" prefHeight="156.0" prefWidth="358.0" />
-      <TextArea fx:id="messageBody" layoutX="89.0" layoutY="192.0" prefHeight="70.0" prefWidth="303.0" promptText="Message" />
-      <Button layoutX="215.0" layoutY="278.0" mnemonicParsing="false" onAction="#sendMessage" text="Send" />
+      <ListView fx:id="messageList" layoutX="28.0" layoutY="25.0" prefHeight="173.0" prefWidth="422.0" />
+      <TextArea fx:id="messageBody" layoutX="28.0" layoutY="214.0" prefHeight="58.0" prefWidth="422.0" promptText="Message" />
+      <Button layoutX="217.0" layoutY="284.0" mnemonicParsing="false" onAction="#sendMessage" text="Send" />
    </children>
 </AnchorPane>

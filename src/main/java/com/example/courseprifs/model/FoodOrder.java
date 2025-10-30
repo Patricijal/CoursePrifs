@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class FoodOrder {
     private Double price;
     @ManyToOne
     private BasicUser buyer;
-    @ManyToMany(mappedBy = "orders", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany
     private List<Cuisine> food;
     @ManyToOne
     private Driver driver;
@@ -33,12 +34,23 @@ public class FoodOrder {
     private Restaurant restaurant;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+    private LocalDate dateCreated;
+    private LocalDate dateUpdated;
 
     public FoodOrder(String name, Double price, BasicUser buyer, Restaurant restaurant) {
         this.name = name;
         this.price = price;
         this.buyer = buyer;
         this.restaurant = restaurant;
+    }
+
+    public FoodOrder(String name, Double price, BasicUser buyer, List<Cuisine> food, Restaurant restaurant) {
+        this.name = name;
+        this.price = price;
+        this.buyer = buyer;
+        this.food = food;
+        this.restaurant = restaurant;
+        this.orderStatus = OrderStatus.PENDING;
     }
 
     @Override

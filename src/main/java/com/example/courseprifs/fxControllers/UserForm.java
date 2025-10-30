@@ -1,11 +1,15 @@
 package com.example.courseprifs.fxControllers;
 
+import com.example.courseprifs.HelloApplication;
 import com.example.courseprifs.hibernateControl.GenericHibernate;
 import com.example.courseprifs.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -178,7 +182,6 @@ public class UserForm implements Initializable {
                     Double.parseDouble(ratingField.getText()));
             genericHibernate.create(restaurant);
         }
-
         // Laikinas kodas
 //        User user = genericHibernate.getEntityById(User.class, 1);
 //        genericHibernate.delete(User.class, 1);
