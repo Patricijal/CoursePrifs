@@ -187,8 +187,6 @@ public class UserForm implements Initializable {
 //        genericHibernate.delete(User.class, 1);
     }
 
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources){
         vehicleTypeField.getItems().setAll(VehicleType.values());

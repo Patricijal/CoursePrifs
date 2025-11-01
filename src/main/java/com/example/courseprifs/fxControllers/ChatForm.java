@@ -9,7 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 
 public class ChatForm {
-    public ListView messageList;
+    public ListView<Review> messageList;
     public TextArea messageBody;
     private EntityManagerFactory entityManagerFactory;
     private CustomHibernate customHibernate;
@@ -24,27 +24,27 @@ public class ChatForm {
     }
 
     public void sendMessage() {
-        FoodOrder managedFoodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
-        if (managedFoodOrder.getChat() == null) {
-            Chat chat = new Chat("Chat no " + managedFoodOrder.getName(), managedFoodOrder);
-            customHibernate.create(chat);
-        }
-        User managedUser = customHibernate.getEntityById(User.class, currentUser.getId());
-        managedFoodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
-        Review message = new Review(messageBody.getText(),
-                (BasicUser) managedUser,
-                managedFoodOrder.getChat());
-        customHibernate.create(message);
-        messageBody.clear();
-
-//        if (currentFoodOrder.getChat() == null) {
-//            Chat chat = new Chat("Chat no " + currentFoodOrder.getName(), currentFoodOrder);
+//        FoodOrder managedFoodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
+//        if (managedFoodOrder.getChat() == null) {
+//            Chat chat = new Chat("Chat no " + managedFoodOrder.getName(), managedFoodOrder);
 //            customHibernate.create(chat);
 //        }
-//        FoodOrder foodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
+//        User managedUser = customHibernate.getEntityById(User.class, currentUser.getId());
+//        managedFoodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
 //        Review message = new Review(messageBody.getText(),
-//                (BasicUser) currentUser,
-//                currentFoodOrder.getChat());
+//                (BasicUser) managedUser,
+//                managedFoodOrder.getChat());
 //        customHibernate.create(message);
+//        messageBody.clear();
+
+        if (currentFoodOrder.getChat() == null) {
+            Chat chat = new Chat("Chat no " + currentFoodOrder.getName(), currentFoodOrder);
+            customHibernate.create(chat);
+        }
+        FoodOrder foodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
+        Review message = new Review(messageBody.getText(),
+                (BasicUser) currentUser,
+                foodOrder.getChat());
+        customHibernate.create(message);
     }
 }

@@ -53,7 +53,6 @@
                               </ContextMenu>
                            </contextMenu></ListView>
                         <TextField fx:id="orderNameField" layoutX="301.0" layoutY="81.0" promptText="Order name" />
-                        <ComboBox fx:id="orderCuisineField" layoutX="301.0" layoutY="273.0" prefWidth="150.0" promptText="Cuisine" />
                         <TextField fx:id="orderPriceField" layoutX="301.0" layoutY="116.0" promptText="Price" />
                         <Button layoutX="301.0" layoutY="364.0" mnemonicParsing="false" onAction="#createOrder" text="Add" />
                         <Button layoutX="369.0" layoutY="364.0" mnemonicParsing="false" onAction="#updateOrder" text="Update" />
@@ -61,10 +60,10 @@
                         <ComboBox fx:id="orderClientList" layoutX="301.0" layoutY="150.0" prefWidth="150.0" promptText="Client" />
                         <ComboBox fx:id="orderRestaurantList" layoutX="301.0" layoutY="182.0" onAction="#loadRestaurantMenuForOrder" prefWidth="150.0" promptText="Restaurant" />
                         <ComboBox fx:id="orderStatusField" layoutX="301.0" layoutY="218.0" prefWidth="150.0" promptText="Order Status" />
-                        <ComboBox fx:id="filterStatus" layoutX="21.0" layoutY="24.0" onAction="#filterOrders" prefWidth="150.0" />
-                        <ComboBox fx:id="filterClients" layoutX="190.0" layoutY="24.0" onAction="#filterOrders" prefWidth="150.0" />
-                        <DatePicker fx:id="filterFrom" layoutX="359.0" layoutY="24.0" onAction="#filterOrders" prefHeight="25.0" prefWidth="154.0" />
-                        <DatePicker fx:id="filterTo" layoutX="528.0" layoutY="24.0" onAction="#filterOrders" prefHeight="25.0" prefWidth="145.0" />
+                        <ComboBox fx:id="filterStatus" layoutX="21.0" layoutY="24.0" onAction="#filterOrders" prefWidth="150.0" promptText="Filter Status" />
+                        <ComboBox fx:id="filterClients" layoutX="190.0" layoutY="24.0" onAction="#filterOrders" prefWidth="150.0" promptText="Filter Client" />
+                        <DatePicker fx:id="filterFrom" layoutX="359.0" layoutY="24.0" onAction="#filterOrders" prefHeight="25.0" prefWidth="154.0" promptText="Date From" />
+                        <DatePicker fx:id="filterTo" layoutX="528.0" layoutY="24.0" onAction="#filterOrders" prefHeight="25.0" prefWidth="145.0" promptText="Date To" />
                         <ListView fx:id="basicUserList" layoutX="473.0" layoutY="72.0" prefHeight="269.0" prefWidth="98.0" />
                         <ListView fx:id="cuisineList" layoutX="581.0" layoutY="72.0" prefHeight="269.0" prefWidth="103.0" AnchorPane.leftAnchor="581.0" AnchorPane.rightAnchor="20.0" />
                         <Button layoutX="575.0" layoutY="364.0" mnemonicParsing="false" onAction="#loadChatForm" text="View Chat" />
@@ -75,11 +74,11 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="cuisineListField" layoutX="14.0" layoutY="40.0" prefHeight="348.0" prefWidth="227.0">
+                        <ListView fx:id="cuisineListField" layoutX="14.0" layoutY="40.0" onMouseClicked="#loadMenuItemInfo" prefHeight="348.0" prefWidth="227.0">
                            <contextMenu>
                               <ContextMenu>
                                 <items>
-                                  <MenuItem mnemonicParsing="false" text="Delete" />
+                                  <MenuItem mnemonicParsing="false" onAction="#deleteCuisine" text="Delete" />
                                 </items>
                               </ContextMenu>
                            </contextMenu></ListView>
@@ -118,6 +117,7 @@
                                 </items>
                               </ContextMenu>
                            </contextMenu></ListView>
+                        <Button layoutX="500.0" layoutY="160.0" mnemonicParsing="false" text="Button" />
                      </children></AnchorPane>
               </content>
             </Tab>
@@ -125,12 +125,20 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="reviewListField" layoutX="21.0" layoutY="20.0" prefHeight="365.0" prefWidth="412.0" />
-                        <TextField fx:id="reviewRatingField" layoutX="462.0" layoutY="20.0" prefHeight="25.0" prefWidth="198.0" promptText="Rating" />
-                        <TextArea fx:id="reviewCommentField" layoutX="461.0" layoutY="57.0" prefHeight="274.0" prefWidth="200.0" promptText="Comment" />
+                        <ListView fx:id="reviewListField" layoutX="21.0" layoutY="20.0" onMouseClicked="#loadReviewInfo" prefHeight="365.0" prefWidth="412.0">
+                           <contextMenu>
+                              <ContextMenu>
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#deleteReview" text="Delete" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu></ListView>
+                        <TextField fx:id="reviewRatingField" layoutX="462.0" layoutY="63.0" prefHeight="25.0" prefWidth="198.0" promptText="Rating (1-5)" />
+                        <TextArea fx:id="reviewCommentField" layoutX="461.0" layoutY="107.0" prefHeight="191.0" prefWidth="200.0" promptText="Comment" />
                         <Button layoutX="461.0" layoutY="359.0" mnemonicParsing="false" onAction="#addReview" text="Add" />
                         <Button layoutX="533.0" layoutY="359.0" mnemonicParsing="false" onAction="#updateReview" text="Update" />
                         <Button layoutX="610.0" layoutY="359.0" mnemonicParsing="false" onAction="#deleteReview" text="Delete" />
+                        <ComboBox fx:id="reviewRestaurantList" layoutX="462.0" layoutY="20.0" prefHeight="25.0" prefWidth="198.0" promptText="Restaurant" />
                      </children></AnchorPane>
               </content>
             </Tab>

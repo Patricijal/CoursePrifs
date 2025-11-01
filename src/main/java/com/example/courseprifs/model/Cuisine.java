@@ -30,22 +30,31 @@ public class Cuisine {
     @ManyToOne
     private Restaurant restaurant;
 
-    public Cuisine(String title, String description, Allergens allergens, double price) {
-        this.title = title;
-        this.description = description;
-        this.allergens = allergens;
-        this.price = price;
-    }
+//    public Cuisine(String title, String description, Allergens allergens, double price) {
+//        this.title = title;
+//        this.description = description;
+//        this.allergens = allergens;
+//        this.price = price;
+//    }
 
-    public Cuisine(String title, String description, Double price, boolean spicy, boolean vegan, Restaurant restaurant) {
+    public Cuisine(String title, String description, Double price, boolean spicy, boolean vegan, Restaurant restaurant, Allergens allergens) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.spicy = spicy;
         this.vegan = vegan;
         this.restaurant = restaurant;
+        this.allergens = allergens;
     }
 
     @Override
     public String toString() { return "Title: " + title + " | Description: " + description + " | Allergens: " + allergens + " | Price: " + price; }
+
+    public boolean getSpicy() {
+        return spicy;
+    }
+
+    public boolean getVegan() {
+        return vegan;
+    }
 }

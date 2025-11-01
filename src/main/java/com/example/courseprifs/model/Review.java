@@ -31,15 +31,22 @@ public class Review {
     @ManyToOne
     private Chat chat;
 
-    public Review(int rating, String text) {
-        this.rating = rating;
-        this.text = text;
-    }
+//    public Review(int rating, String text) {
+//        this.rating = rating;
+//        this.text = text;
+//    }
 
     public Review(String text, BasicUser commentOwner, Chat chat) {
         this.text = text;
         this.commentOwner = commentOwner;
         this.chat = chat;
+    }
+
+    public Review(int rating, String text, BasicUser commentOwner, Restaurant restaurant) {
+        this.rating = rating;
+        this.text = text;
+        this.commentOwner = commentOwner;
+        this.restaurant = restaurant;
     }
 
     @Override
