@@ -54,7 +54,7 @@ public class CustomHibernate extends GenericHibernate {
             orders = q.getResultList();
         } catch (Exception e) {
             // Handle exception (e.g., user not found)
-            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Restaurant orders");
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Restaurant Orders");
         }
         return orders;
     }
@@ -76,7 +76,7 @@ public class CustomHibernate extends GenericHibernate {
             orders = q.getResultList();
         } catch (Exception e) {
             // Handle exception (e.g., user not found)
-            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Restaurant orders");
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Filtered Restaurant Orders");
         }
         return orders;
     }
@@ -94,8 +94,26 @@ public class CustomHibernate extends GenericHibernate {
             menu = q.getResultList();
         } catch (Exception e) {
             // Handle exception (e.g., user not found)
-            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Restaurant orders");
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Restaurant Cuisine");
         }
         return menu;
+    }
+
+    public List<Review> getChatMessages(Chat chat) {
+        List<Review> messages = new ArrayList<>();
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Review> query = cb.createQuery(Review.class);
+            Root<Review> root = query.from(Review.class);
+
+            query.select(root).where(cb.equal(root.get("chat"), chat));
+            Query q = entityManager.createQuery(query);
+            messages = q.getResultList();
+        } catch (Exception e) {
+            // Handle exception (e.g., user not found)
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Chat Messages");
+        }
+        return messages;
     }
 }

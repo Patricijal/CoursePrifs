@@ -20,9 +20,9 @@ public class BasicUser extends User{
     protected List<Chat> chats;
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<FoodOrder> myOrders;
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "commentOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<Review> myReviews;
-    @OneToMany(mappedBy = "feedBackOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "feedbackUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<Review> feedback;
 
     public BasicUser(String login, String password, String name, String surname, String phoneNumber, String address) {

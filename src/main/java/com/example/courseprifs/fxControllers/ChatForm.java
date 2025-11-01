@@ -2,9 +2,7 @@ package com.example.courseprifs.fxControllers;
 
 import com.example.courseprifs.hibernateControl.CustomHibernate;
 import com.example.courseprifs.hibernateControl.GenericHibernate;
-import com.example.courseprifs.model.FoodOrder;
-import com.example.courseprifs.model.Review;
-import com.example.courseprifs.model.User;
+import com.example.courseprifs.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ListView;
@@ -26,6 +24,27 @@ public class ChatForm {
     }
 
     public void sendMessage() {
-        Review message = new Review();
+        FoodOrder managedFoodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
+        if (managedFoodOrder.getChat() == null) {
+            Chat chat = new Chat("Chat no " + managedFoodOrder.getName(), managedFoodOrder);
+            customHibernate.create(chat);
+        }
+        User managedUser = customHibernate.getEntityById(User.class, currentUser.getId());
+        managedFoodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
+        Review message = new Review(messageBody.getText(),
+                (BasicUser) managedUser,
+                managedFoodOrder.getChat());
+        customHibernate.create(message);
+        messageBody.clear();
+
+//        if (currentFoodOrder.getChat() == null) {
+//            Chat chat = new Chat("Chat no " + currentFoodOrder.getName(), currentFoodOrder);
+//            customHibernate.create(chat);
+//        }
+//        FoodOrder foodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
+//        Review message = new Review(messageBody.getText(),
+//                (BasicUser) currentUser,
+//                currentFoodOrder.getChat());
+//        customHibernate.create(message);
     }
 }

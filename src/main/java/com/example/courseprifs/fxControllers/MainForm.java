@@ -4,6 +4,7 @@ import com.example.courseprifs.HelloApplication;
 import com.example.courseprifs.hibernateControl.CustomHibernate;
 import com.example.courseprifs.hibernateControl.GenericHibernate;
 import com.example.courseprifs.model.*;
+import com.example.courseprifs.utils.FxUtils;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -95,7 +96,12 @@ public class MainForm implements Initializable {
     @FXML
     public TextArea reviewCommentField;
 
-
+    //<editor-fold desc="Admin Chat Elements">
+    @FXML
+    public ListView<Chat> allChats;
+    @FXML
+    public ListView<Review> chatMessages;
+    //</editor-fold>
 
     private EntityManagerFactory entityManagerFactory;
     private CustomHibernate customHibernate;
@@ -144,7 +150,7 @@ public class MainForm implements Initializable {
             List<Cuisine> cuisineList = customHibernate.getAllRecords(Cuisine.class);
             cuisineListField.getItems().addAll(cuisineList);
         } else if (chatTab.isSelected()) {
-
+            allChats.getItems().addAll(customHibernate.getAllRecords(Chat.class));
         } else if (reviewTab.isSelected()) {
 
         } else if (altTab.isSelected()) {
@@ -157,6 +163,7 @@ public class MainForm implements Initializable {
     private void clearAllOrderFields() {
         orderListField.getItems().clear();
         basicUserList.getItems().clear();
+        cuisineList.getItems().clear();
         orderClientList.getItems().clear();
         orderRestaurantList.getItems().clear();
         orderNameField.clear();
@@ -388,4 +395,36 @@ public class MainForm implements Initializable {
         cuisineAllergensField.getItems().setAll(Allergens.values());
     }
 
+    //<editor-fold desc="Admin Chat Functions">
+    public void loadChatMessages() {
+        chatMessages.getItems().addAll(customHibernate.getChatMessages(allChats.getSelectionModel().getSelectedItem()));
+    }
+
+    public void deleteChat() {
+    }
+
+    public void deleteMessage() {
+    }
+
+    public void loadChatForm() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("chat-form.fxml"));
+        Parent parent = fxmlLoader.load();
+
+        FoodOrder selectedOrder = orderListField.getSelectionModel().getSelectedItem();
+        if (selectedOrder == null) {
+            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "Chat load", "No order selected");
+            return;
+        }
+
+        ChatForm chatForm = fxmlLoader.getController();
+        chatForm.setData(entityManagerFactory, currentUser, selectedOrder);
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(parent);
+        stage.setTitle("Chat for order: " + selectedOrder.getName());
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    }
+    //</editor-fold>
 }

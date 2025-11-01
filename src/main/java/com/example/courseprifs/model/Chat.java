@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,9 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private String name;
+    private String text;
+    private LocalDate dateCreated;
     @ManyToOne
     private BasicUser customer;
     @ManyToOne
@@ -28,7 +32,19 @@ public class Chat {
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> messages;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime lastMessageAt;
-    private boolean isActive;
+//    private LocalDateTime createdAt;
+//    private LocalDateTime lastMessageAt;
+//    private boolean isActive;
+
+    public Chat(String name, FoodOrder order) {
+        this.name = name;
+        this.order = order;
+        this.dateCreated = LocalDate.now();
+        this.messages = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Chat: " + name + " | Created on: " + dateCreated;
+    }
 }

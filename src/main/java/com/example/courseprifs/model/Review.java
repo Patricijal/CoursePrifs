@@ -21,9 +21,9 @@ public class Review {
     private int rating;
     private String text;
     @ManyToOne
-    private BasicUser owner;
+    private BasicUser commentOwner;
     @ManyToOne
-    private BasicUser feedBackOwner;
+    private BasicUser feedbackUser;
     @ManyToOne
     private Restaurant restaurant;
     @OneToOne
@@ -34,6 +34,12 @@ public class Review {
     public Review(int rating, String text) {
         this.rating = rating;
         this.text = text;
+    }
+
+    public Review(String text, BasicUser commentOwner, Chat chat) {
+        this.text = text;
+        this.commentOwner = commentOwner;
+        this.chat = chat;
     }
 
     @Override
