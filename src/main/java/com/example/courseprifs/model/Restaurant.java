@@ -15,15 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Restaurant extends BasicUser {
+    private String workHours;
+    private Double rating;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cuisine> menuItems;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<FoodOrder> MyOrders;
-
-    private String workHours;
-    private Double rating;
+    private List<FoodOrder> myOrders;
 
     public Restaurant(String login, String password, String name, String surname, String phoneNumber, String address, String workHours, Double rating) {
         super(login, password, name, surname, phoneNumber, address);

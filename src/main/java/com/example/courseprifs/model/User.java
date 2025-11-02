@@ -34,6 +34,7 @@ public class User implements Serializable {
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
+        this.dateCreated = LocalDateTime.now();
     }
 
 //    @Override

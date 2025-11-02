@@ -131,23 +131,45 @@ public class CustomHibernate extends GenericHibernate {
         return menu;
     }
 
-//    public List<Review> getChatMessages(Chat chat) {
-//        List<Review> messages = new ArrayList<>();
-//        try {
-//            entityManager = entityManagerFactory.createEntityManager();
-//            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//            CriteriaQuery<Review> query = cb.createQuery(Review.class);
-//            Root<Review> root = query.from(Review.class);
-//
-//            query.select(root).where(cb.equal(root.get("chat"), chat));
-//            Query q = entityManager.createQuery(query);
-//            messages = q.getResultList();
-//        } catch (Exception e) {
-//            // Handle exception (e.g., user not found)
-//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Chat Messages");
-//        }
-//        return messages;
-//    }
+    public List<Cuisine> getFilteredRestaurantCuisine(Allergens allergen, Boolean veganOnly, Boolean spicyOnly, Restaurant restaurant) {
+        List<Cuisine> menu = new ArrayList<>();
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Cuisine> query = cb.createQuery(Cuisine.class);
+            Root<Cuisine> root = query.from(Cuisine.class);
+            // Start with predicates list
+            List<Predicate> predicates = new ArrayList<>();
+            // Always filter by restaurant if provided
+            if (restaurant != null) {
+                predicates.add(cb.equal(root.get("restaurant"), restaurant));
+            }
+            // Add allergen filter if specified
+            if (allergen != null) {
+                predicates.add(cb.equal(root.get("allergens"), allergen));
+            }
+            // Add vegan filter if specified
+            if (veganOnly != null && veganOnly) {
+                predicates.add(cb.isTrue(root.get("vegan")));
+            }
+            // Add spicy filter if specified
+            if (spicyOnly != null && spicyOnly) {
+                predicates.add(cb.isTrue(root.get("spicy")));
+            }
+            // Combine all predicates with AND
+            if (!predicates.isEmpty()) {
+                query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
+            } else {
+                query.select(root);
+            }
+            Query q = entityManager.createQuery(query);
+            menu = q.getResultList();
+        } catch (Exception e) {
+            // Handle exception (e.g., user not found)
+            FxUtils.generateExceptionAlert(Alert.AlertType.ERROR, "Something went wrong getting Filtered Restaurant Cuisine", e);
+        }
+        return menu;
+    }
 
     public List<Review> getChatMessages(Chat chat) {
         List<Review> messages = new ArrayList<>();
@@ -163,6 +185,24 @@ public class CustomHibernate extends GenericHibernate {
         } catch (Exception e) {
             // Handle exception (e.g., user not found)
             FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Chat Messages");
+        }
+        return messages;
+    }
+
+    public List<Review> getFilteredReviews(Restaurant restaurant) {
+        List<Review> messages = new ArrayList<>();
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Review> query = cb.createQuery(Review.class);
+            Root<Review> root = query.from(Review.class);
+
+            query.select(root).where(cb.equal(root.get("restaurant"), restaurant));
+            Query q = entityManager.createQuery(query);
+            messages = q.getResultList();
+        } catch (Exception e) {
+            // Handle exception (e.g., user not found)
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", e.getMessage());
         }
         return messages;
     }

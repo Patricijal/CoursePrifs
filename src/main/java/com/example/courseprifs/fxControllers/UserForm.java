@@ -3,6 +3,7 @@ package com.example.courseprifs.fxControllers;
 import com.example.courseprifs.HelloApplication;
 import com.example.courseprifs.hibernateControl.GenericHibernate;
 import com.example.courseprifs.model.*;
+import com.example.courseprifs.utils.FxUtils;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -72,32 +73,25 @@ public class UserForm implements Initializable {
 
     private void fillUserDataForUpdate() {
         if (userForUpdate != null && isForUpdate) {
-            // --- Common fields for all user types ---
             usernameField.setText(userForUpdate.getLogin());
             pswField.setText(userForUpdate.getPassword());
             nameField.setText(userForUpdate.getName());
             surnameField.setText(userForUpdate.getSurname());
             phoneNumField.setText(userForUpdate.getPhoneNumber());
-
-            // --- Subclass-specific fields ---
             if (userForUpdate instanceof BasicUser basicUser) {
                 addressField.setText(basicUser.getAddress());
             }
-
             if (userForUpdate instanceof Driver driver) {
                 addressField.setText(driver.getAddress());
                 licenseField.setText(driver.getLicense());
                 bDateField.setValue(driver.getBDate());
                 vehicleTypeField.setValue(driver.getVehicleType());
             }
-
             if (userForUpdate instanceof Restaurant restaurant) {
                 addressField.setText(restaurant.getAddress());
                 workHoursField.setText(restaurant.getWorkHours());
                 ratingField.setText(String.valueOf(restaurant.getRating()));
             }
-
-            // --- Auto-select correct user type radio ---
             if (userForUpdate instanceof Driver) {
                 driverRadio.setSelected(true);
             } else if (userForUpdate instanceof Restaurant) {
@@ -107,22 +101,16 @@ public class UserForm implements Initializable {
             } else {
                 userRadio.setSelected(true);
             }
-
-            // Update visible panes accordingly
             disableFields();
-
-            // Make sure update button is visible
             updateButton.setVisible(true);
             saveButton.setVisible(false);
-
         } else {
-            // If not updating, hide the update button
             updateButton.setVisible(false);
         }
     }
 
     public void disableFields() {
-        boolean isUser = userRadio.isSelected();
+//        boolean isUser = userRadio.isSelected();
         boolean isClient = clientRadio.isSelected();
         boolean isDriver = driverRadio.isSelected();
         boolean isRestaurant = restaurantRadio.isSelected();
@@ -145,6 +133,9 @@ public class UserForm implements Initializable {
     }
 
     public void createNewUser() {
+        if (!validateUserFields()) {
+            return;
+        }
         if (userRadio.isSelected()) {
             User user = new User(usernameField.getText(),
                     pswField.getText(),
@@ -194,6 +185,9 @@ public class UserForm implements Initializable {
     }
 
     public void updateUser() {
+        if (!validateUserFields()) {
+            return;
+        }
         // Common fields (shared by all subclasses)
         userForUpdate.setLogin(usernameField.getText());
         userForUpdate.setPassword(pswField.getText());
@@ -229,5 +223,119 @@ public class UserForm implements Initializable {
         // Close the form
         Stage stage = (Stage) updateButton.getScene().getWindow();
         stage.close();
+    }
+
+
+
+    private boolean validateUserFields() {
+        // Common fields validation
+        if (usernameField.getText() == null || usernameField.getText().trim().isEmpty()) {
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Username Missing", "Please enter a username.");
+            return false;
+        }
+
+        if (pswField.getText() == null || pswField.getText().trim().isEmpty()) {
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Password Missing", "Please enter a password.");
+            return false;
+        }
+
+        if (pswField.getText().length() < 4) {
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Password Too Short", "Password must be at least 4 characters long.");
+            return false;
+        }
+
+        if (nameField.getText() == null || nameField.getText().trim().isEmpty()) {
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Name Missing", "Please enter a name.");
+            return false;
+        }
+
+        if (surnameField.getText() == null || surnameField.getText().trim().isEmpty()) {
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Surname Missing", "Please enter a surname.");
+            return false;
+        }
+
+        if (phoneNumField.getText() == null || phoneNumField.getText().trim().isEmpty()) {
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Phone Number Missing", "Please enter a phone number.");
+            return false;
+        }
+
+//        // Phone number format validation (basic)
+//        if (!phoneNumField.getText().matches("\\+?[0-9\\s-()]+")) {
+//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Phone Number", "Please enter a valid phone number.");
+//            return false;
+//        }
+
+        // User type selection validation
+        if (!userRadio.isSelected() && !clientRadio.isSelected() && !driverRadio.isSelected() && !restaurantRadio.isSelected()) {
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "User Type Not Selected", "Please select a user type.");
+            return false;
+        }
+
+        // Basic User (Client) validation
+        if (clientRadio.isSelected() || driverRadio.isSelected() || restaurantRadio.isSelected()) {
+            if (addressField.getText() == null || addressField.getText().trim().isEmpty()) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Address Missing", "Please enter an address.");
+                return false;
+            }
+        }
+
+        // Driver-specific validation
+        if (driverRadio.isSelected()) {
+            if (licenseField.getText() == null || licenseField.getText().trim().isEmpty()) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "License Missing", "Please enter a driver's license.");
+                return false;
+            }
+
+            if (bDateField.getValue() == null) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Birth Date Missing", "Please select a birth date.");
+                return false;
+            }
+
+            if (vehicleTypeField.getSelectionModel().getSelectedItem() == null) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Vehicle Type Not Selected", "Please select a vehicle type.");
+                return false;
+            }
+        }
+
+        // Restaurant-specific validation
+        if (restaurantRadio.isSelected()) {
+            if (workHoursField.getText() == null || workHoursField.getText().trim().isEmpty()) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Work Hours Missing", "Please enter work hours.");
+                return false;
+            }
+
+            if (ratingField.getText() == null || ratingField.getText().trim().isEmpty()) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Rating Missing", "Please enter a rating.");
+                return false;
+            }
+
+            if (!isNumeric(ratingField.getText())) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Rating", "Please enter a valid numeric rating.");
+                return false;
+            }
+
+            // Check if rating is between 0 and 5
+            try {
+                double rating = Double.parseDouble(ratingField.getText());
+                if (rating < 0 || rating > 5) {
+                    FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Rating", "Rating must be between 0 and 5.");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Rating", "Please enter a valid numeric rating.");
+                return false;
+            }
+        }
+
+        return true; // All validations passed
+    }
+
+    private boolean isNumeric(String text) {
+        try {
+            Double.parseDouble(text);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

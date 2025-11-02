@@ -49,8 +49,20 @@ public class Review {
         this.restaurant = restaurant;
     }
 
+//    @Override
+//    public String toString() {
+//        return "Rating: " + rating + " | Text: " + text;
+//    }
+
     @Override
     public String toString() {
-        return "Rating: " + rating + " | Text: " + text;
+        if (chat != null) {
+            // Chat message format
+            return "[" + (commentOwner != null ? commentOwner.getLogin() : "Unknown") + "]: " + text;
+        } else {
+            // Review format
+            return "[" + (commentOwner != null ? commentOwner.getLogin() : "Unknown") + "]: " +
+                    "Rating: " + rating + " | Comment: " + text + (restaurant != null ? " | Restaurant: " + restaurant.getName() : "");
+        }
     }
 }
