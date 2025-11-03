@@ -6,6 +6,8 @@ import com.example.courseprifs.hibernateControl.GenericHibernate;
 import com.example.courseprifs.model.*;
 import com.example.courseprifs.utils.FxUtils;
 import jakarta.persistence.EntityManagerFactory;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,6 +24,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -119,10 +124,67 @@ public class MainForm implements Initializable {
     public Button reviewUpdateButton;
     //</editor-fold>
 
+    //<editor-fold desc="User Management TableView Elements">
+    @FXML
+    public TableView<UserTableParameters> userTable;
+    @FXML
+    public TableColumn<UserTableParameters, Integer> idCol;
+    @FXML
+    public TableColumn<UserTableParameters, String> userTypeCol;
+    @FXML
+    public TableColumn<UserTableParameters, String> loginCol;
+    @FXML
+    public TableColumn<UserTableParameters, String> passCol;
+    @FXML
+    public TableColumn<UserTableParameters, String> nameCol;
+    @FXML
+    public TableColumn<UserTableParameters, String> surnameCol;
+    @FXML
+    public TableColumn<UserTableParameters, String> addrCol;
+    @FXML
+    public TableColumn<UserTableParameters, Void> dummyCol;
+
+    private ObservableList<UserTableParameters> data = FXCollections.observableArrayList();
+    //</editor-fold>
+
     private EntityManagerFactory entityManagerFactory;
     private CustomHibernate customHibernate;
     private User currentUser;
     private GenericHibernate genericHibernate;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        cuisineList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        userTable.setEditable(true);
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        userTypeCol.setCellValueFactory(new PropertyValueFactory<>("userType"));
+        loginCol.setCellValueFactory(new PropertyValueFactory<>("login"));
+        passCol.setCellValueFactory(new PropertyValueFactory<>("password"));
+        passCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        passCol.setOnEditCommit(event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setPassword(event.getNewValue());
+            User user = customHibernate.getEntityById(User.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            user.setPassword(event.getNewValue());
+            customHibernate.update(user);
+        });
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        nameCol.setOnEditCommit(event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setName(event.getNewValue());
+            User user = customHibernate.getEntityById(User.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            user.setName(event.getNewValue());
+            customHibernate.update(user);
+        });
+        surnameCol.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        surnameCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        surnameCol.setOnEditCommit(event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setSurname(event.getNewValue());
+            User user = customHibernate.getEntityById(User.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            user.setSurname(event.getNewValue());
+            customHibernate.update(user);
+        });
+        addrCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+    }
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;
@@ -141,11 +203,9 @@ public class MainForm implements Initializable {
             reviewCommentField.setDisable(true);
             reviewAddButton.setDisable(true);
             reviewUpdateButton.setDisable(true);
-
             // add logic for restaurant
 //            orderRestaurantList.setDisable(true);
 //            cuisineRestaurantList.setVisible(false);
-
         } else if (currentUser instanceof Driver) {
             tabsPane.getTabs().addAll(orderTab);
         } else if (currentUser instanceof BasicUser) {
@@ -172,7 +232,30 @@ public class MainForm implements Initializable {
     //<editor-fold desc="User Tab functionality">
     public void reloadTableData() {
         if (userTab.isSelected()) {
-            // table view
+            userTable.getItems().clear();
+            List<User> users = customHibernate.getAllRecords(User.class);
+            for (User u:users) {
+                UserTableParameters userTableParameters = new UserTableParameters();
+                userTableParameters.setId(u.getId());
+                userTableParameters.setUserType(u.getClass().getSimpleName());
+                userTableParameters.setLogin(u.getLogin());
+                userTableParameters.setPassword(u.getPassword());
+                userTableParameters.setName(u.getName());
+                userTableParameters.setSurname(u.getSurname());
+                //baigti bendrus laukus
+                if (u instanceof BasicUser) {
+                    userTableParameters.setAddress(((BasicUser) u).getAddress());
+                }
+                if (u instanceof Restaurant) {
+
+                }
+                if (u instanceof Driver) {
+
+                }
+                data.add(userTableParameters);
+            }
+            userTable.getItems().addAll(data);
+            data.clear();
         } else if (orderTab.isSelected()) {
             clearAllOrderFields();
             initializeOrderFilterComponents();
@@ -355,11 +438,14 @@ public class MainForm implements Initializable {
         if (!validateOrderFields()) {
             return; // Stop execution if validation fails
         }
+        ObservableList<Cuisine> selectedCuisines = cuisineList.getSelectionModel().getSelectedItems();
+        List<Cuisine> cuisineList = new ArrayList<>(selectedCuisines);
         if (isNumeric(orderPriceField.getText())) {
             FoodOrder order = new FoodOrder(orderNameField.getText(),
                     Double.parseDouble(orderPriceField.getText()),
                     orderClientList.getValue(),
-                    cuisineList.getSelectionModel().getSelectedItems(),
+//                    cuisineList.getSelectionModel().getSelectedItems(),
+                    cuisineList,
                     orderRestaurantList.getValue());
             customHibernate.create(order);
 
@@ -428,6 +514,8 @@ public class MainForm implements Initializable {
             FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "Update Order", "No order selected");
             return;
         }
+        ObservableList<Cuisine> selectedCuisines = cuisineList.getSelectionModel().getSelectedItems();
+        List<Cuisine> cuisineList = new ArrayList<>(selectedCuisines);
         order.setName(orderNameField.getText());
         try {
             order.setPrice(Double.parseDouble(orderPriceField.getText()));
@@ -435,7 +523,8 @@ public class MainForm implements Initializable {
             order.setPrice(0.0); // default if invalid input
         }
         order.setBuyer(orderClientList.getSelectionModel().getSelectedItem());
-        order.setFood(cuisineList.getSelectionModel().getSelectedItems());
+//        order.setFood(cuisineList.getSelectionModel().getSelectedItems());
+        order.setFood(cuisineList);
         order.setRestaurant(orderRestaurantList.getSelectionModel().getSelectedItem());
         order.setOrderStatus(orderStatusField.getValue());
         customHibernate.update(order);
@@ -730,10 +819,6 @@ public class MainForm implements Initializable {
         }
     }
     //</editor-fold>
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-    }
 
     //<editor-fold desc="Admin Chat Functions">
     public void loadChatMessages() {

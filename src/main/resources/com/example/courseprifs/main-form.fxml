@@ -24,23 +24,24 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="699.0">
                      <children>
-                        <TableView layoutX="7.0" layoutY="7.0" prefHeight="341.0" prefWidth="684.0">
+                        <TableView fx:id="userTable" layoutX="7.0" layoutY="7.0" prefHeight="341.0" prefWidth="684.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="Id" />
-                            <TableColumn prefWidth="75.0" text="Login" />
-                              <TableColumn prefWidth="75.0" text="Password" />
-                              <TableColumn prefWidth="75.0" text="Name" />
-                              <TableColumn prefWidth="75.0" text="Surname" />
-                              <TableColumn prefWidth="75.0" text="Action" />
-                              <TableColumn prefWidth="75.0" text="Order history" />
+                            <TableColumn fx:id="idCol" prefWidth="75.0" text="Id" />
+                            <TableColumn fx:id="userTypeCol" prefWidth="75.0" text="User type" />
+                              <TableColumn fx:id="loginCol" prefWidth="75.0" text="Login" />
+                              <TableColumn fx:id="passCol" prefWidth="75.0" text="Password" />
+                              <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
+                              <TableColumn fx:id="surnameCol" prefWidth="75.0" text="Surname" />
+                              <TableColumn fx:id="addrCol" prefWidth="75.0" text="Address" />
+                              <TableColumn fx:id="dummyCol" prefWidth="75.0" text="Action" />
                           </columns>
                         </TableView>
-                        <Button layoutX="299.0" layoutY="365.0" mnemonicParsing="false" text="Create new user" />
+                        <Button layoutX="299.0" layoutY="365.0" mnemonicParsing="false" onAction="#addUser" text="Create new user" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab fx:id="orderTab" onSelectionChanged="#reloadTableData" text="Order management">
+            <Tab fx:id="orderTab" onSelectionChanged="#reloadTableData" text="Orders">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="445.0" prefWidth="759.0">
                      <children>
@@ -73,7 +74,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="cuisineTab" onSelectionChanged="#reloadTableData" text="Cuisine management">
+            <Tab fx:id="cuisineTab" onSelectionChanged="#reloadTableData" text="Cuisine">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -104,7 +105,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="chatTab" onSelectionChanged="#reloadTableData" text="Chat management">
+            <Tab fx:id="chatTab" onSelectionChanged="#reloadTableData" text="Chats">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -132,7 +133,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="reviewTab" onSelectionChanged="#reloadTableData" text="Review">
+            <Tab fx:id="reviewTab" onSelectionChanged="#reloadTableData" text="Reviews">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
