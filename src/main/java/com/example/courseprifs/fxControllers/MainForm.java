@@ -448,6 +448,15 @@ public class MainForm implements Initializable {
             FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "Delete Order", "No order selected");
             return;
         }
+        selectedOrder = customHibernate.getEntityById(FoodOrder.class, selectedOrder.getId());
+        Chat chat = selectedOrder.getChat();
+        if (chat != null) {
+            chat.setOrder(null);
+            selectedOrder.setChat(null);
+            customHibernate.update(chat);
+            customHibernate.update(selectedOrder);
+            customHibernate.delete(Chat.class, chat.getId());
+        }
         customHibernate.delete(FoodOrder.class, selectedOrder.getId());
         fillOrderList();
     }
@@ -740,8 +749,12 @@ public class MainForm implements Initializable {
             FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "Delete Chat", "No chat selected");
             return;
         }
+        FoodOrder foodOrder = customHibernate.getEntityById(FoodOrder.class, selectedChat.getOrder().getId());
+        if (foodOrder != null) {
+            foodOrder.setChat(null);
+            customHibernate.update(foodOrder);
+        }
         customHibernate.delete(Chat.class, selectedChat.getId());
-
         allChats.getItems().clear();
         chatMessages.getItems().clear();
         allChats.getItems().addAll(customHibernate.getAllRecords(Chat.class));
