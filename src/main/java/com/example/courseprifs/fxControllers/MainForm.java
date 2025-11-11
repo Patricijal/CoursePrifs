@@ -438,14 +438,14 @@ public class MainForm implements Initializable {
         if (!validateOrderFields()) {
             return; // Stop execution if validation fails
         }
-        ObservableList<Cuisine> selectedCuisines = cuisineList.getSelectionModel().getSelectedItems();
-        List<Cuisine> cuisineList = new ArrayList<>(selectedCuisines);
+//        ObservableList<Cuisine> selectedCuisines = cuisineList.getSelectionModel().getSelectedItems();
+//        List<Cuisine> cuisineList = new ArrayList<>(selectedCuisines);
         if (isNumeric(orderPriceField.getText())) {
             FoodOrder order = new FoodOrder(orderNameField.getText(),
                     Double.parseDouble(orderPriceField.getText()),
                     orderClientList.getValue(),
-//                    cuisineList.getSelectionModel().getSelectedItems(),
-                    cuisineList,
+                    cuisineList.getSelectionModel().getSelectedItems(),
+//                    cuisineList,
                     orderRestaurantList.getValue());
             customHibernate.create(order);
 
@@ -514,8 +514,8 @@ public class MainForm implements Initializable {
             FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "Update Order", "No order selected");
             return;
         }
-        ObservableList<Cuisine> selectedCuisines = cuisineList.getSelectionModel().getSelectedItems();
-        List<Cuisine> cuisineList = new ArrayList<>(selectedCuisines);
+//        ObservableList<Cuisine> selectedCuisines = cuisineList.getSelectionModel().getSelectedItems();
+//        List<Cuisine> cuisineList = new ArrayList<>(selectedCuisines);
         order.setName(orderNameField.getText());
         try {
             order.setPrice(Double.parseDouble(orderPriceField.getText()));
@@ -523,8 +523,8 @@ public class MainForm implements Initializable {
             order.setPrice(0.0); // default if invalid input
         }
         order.setBuyer(orderClientList.getSelectionModel().getSelectedItem());
-//        order.setFood(cuisineList.getSelectionModel().getSelectedItems());
-        order.setFood(cuisineList);
+        order.setFood(cuisineList.getSelectionModel().getSelectedItems());
+//        order.setFood(cuisineList);
         order.setRestaurant(orderRestaurantList.getSelectionModel().getSelectedItem());
         order.setOrderStatus(orderStatusField.getValue());
         customHibernate.update(order);
