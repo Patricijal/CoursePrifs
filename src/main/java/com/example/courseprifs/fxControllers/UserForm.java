@@ -94,12 +94,24 @@ public class UserForm implements Initializable {
             }
             if (userForUpdate instanceof Driver) {
                 driverRadio.setSelected(true);
+                userRadio.setDisable(true);
+                clientRadio.setDisable(true);
+                restaurantRadio.setDisable(true);
             } else if (userForUpdate instanceof Restaurant) {
                 restaurantRadio.setSelected(true);
+                driverRadio.setDisable(true);
+                userRadio.setDisable(true);
+                clientRadio.setDisable(true);
             } else if (userForUpdate instanceof BasicUser) {
                 clientRadio.setSelected(true);
+                userRadio.setDisable(true);
+                driverRadio.setDisable(true);
+                restaurantRadio.setDisable(true);
             } else {
                 userRadio.setSelected(true);
+                driverRadio.setDisable(true);
+                clientRadio.setDisable(true);
+                restaurantRadio.setDisable(true);
             }
             disableFields();
             updateButton.setVisible(true);
