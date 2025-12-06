@@ -45,8 +45,18 @@ public class MainForm implements Initializable {
     @FXML
     public TabPane tabsPane;
 
+    //<editor-fold desc="User Management Tab Elements">
     @FXML
     public ListView<User> userListField;
+    @FXML
+    public TextField filterLoginField;
+    @FXML
+    public TextField filterNameField;
+    @FXML
+    public TextField filterSurnameField;
+    @FXML
+    public TextField filterPhoneNumberField;
+    //</editor-fold>
 
     //<editor-fold desc="Order Management Tab Elements">
     @FXML
@@ -207,9 +217,9 @@ public class MainForm implements Initializable {
 //            orderRestaurantList.setDisable(true);
 //            cuisineRestaurantList.setVisible(false);
         } else if (currentUser instanceof Driver) {
-            tabsPane.getTabs().addAll(orderTab);
+//            tabsPane.getTabs().addAll(orderTab);
         } else if (currentUser instanceof BasicUser) {
-            tabsPane.getTabs().addAll(reviewTab);
+//            tabsPane.getTabs().addAll(reviewTab);
         } else {
             tabsPane.getTabs().addAll(userTab, altTab, orderTab, cuisineTab, chatTab, reviewTab);
         }
@@ -414,6 +424,13 @@ public class MainForm implements Initializable {
         userListField.getItems().clear();
         userListField.getItems().addAll(customHibernate.getAllRecords(User.class));
     }
+
+
+    public void filterUsers() {
+        List<User> filtered = customHibernate.getByCriteria(filterLoginField.getText(), filterNameField.getText(), filterSurnameField.getText(), filterPhoneNumberField.getText());
+        userListField.getItems().clear();
+        userListField.getItems().addAll(filtered);
+    }
     //</editor-fold>
 
     //<editor-fold desc="Order Management Tab Functions">
@@ -612,7 +629,10 @@ public class MainForm implements Initializable {
         FoodOrder selectedOrder = orderListField.getSelectionModel().getSelectedItem();
         if (selectedOrder == null) return;
 
-        boolean shouldDisable = (selectedOrder.getOrderStatus() == OrderStatus.COMPLETED);
+        boolean shouldDisable = selectedOrder.getOrderStatus() == OrderStatus.PREPARING
+                || selectedOrder.getOrderStatus() == OrderStatus.IN_DELIVERY
+                || selectedOrder.getOrderStatus() == OrderStatus.DELIVERED
+                || selectedOrder.getOrderStatus() == OrderStatus.COMPLETED;
 
         orderNameField.setDisable(shouldDisable);
         orderPriceField.setDisable(shouldDisable);

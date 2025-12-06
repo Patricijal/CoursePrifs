@@ -206,4 +206,29 @@ public class CustomHibernate extends GenericHibernate {
         }
         return messages;
     }
+
+    public List<User> getByCriteria(String login, String name, String surname, String phoneNumber) {
+        List<User> list = new ArrayList<>();
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<User> query = cb.createQuery(User.class);
+            Root<User> root = query.from(User.class);
+
+            query.select(root).where(cb.and(
+                    cb.like(root.get("login"), "%" + login + "%"),
+                    cb.like(root.get("name"), "%" + name + "%"),
+                    cb.like(root.get("surname"), "%" + surname + "%"),
+                    cb.like(root.get("phoneNumber"), "%" + phoneNumber + "%")
+            ));
+            Query q = entityManager.createQuery(query);
+            list = q.getResultList();
+        } catch (Exception e) {
+            // Handle exception (e.g., user not found)
+            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting Wizard by criteria");
+        } finally {
+            if (entityManager != null) entityManager.close();
+        }
+        return list;
+    }
 }

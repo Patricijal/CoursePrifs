@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="441.0" prefWidth="699.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.courseprifs.fxControllers.MainForm">
    <children>
@@ -160,11 +161,20 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="userListField" layoutX="16.0" layoutY="30.0" prefHeight="183.0" prefWidth="668.0" />
-                        <Button layoutX="95.0" layoutY="235.0" mnemonicParsing="false" onAction="#addUser" text="Add new user" />
-                        <Button layoutX="309.0" layoutY="235.0" mnemonicParsing="false" onAction="#loadUser" text="Update user" />
-                        <Button layoutX="510.0" layoutY="235.0" mnemonicParsing="false" onAction="#deleteUser" text="Delete user" />
-                        <Label layoutX="16.0" layoutY="14.0" text="Users:" />
+                        <ListView fx:id="userListField" layoutX="16.0" layoutY="101.0" prefHeight="220.0" prefWidth="668.0" />
+                        <Button layoutX="100.0" layoutY="347.0" mnemonicParsing="false" onAction="#addUser" text="Add new user" />
+                        <Button layoutX="314.0" layoutY="347.0" mnemonicParsing="false" onAction="#loadUser" text="Update user" />
+                        <Button layoutX="515.0" layoutY="347.0" mnemonicParsing="false" onAction="#deleteUser" text="Delete user" />
+                        <Label layoutX="16.0" layoutY="85.0" text="Users:" />
+                        <TextField fx:id="filterLoginField" layoutX="16.0" layoutY="24.0" />
+                        <TextField fx:id="filterNameField" layoutX="179.0" layoutY="24.0" />
+                        <TextField fx:id="filterSurnameField" layoutX="345.0" layoutY="24.0" />
+                        <TextField fx:id="filterPhoneNumberField" layoutX="507.0" layoutY="24.0" />
+                        <Text layoutX="179.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+                        <Text layoutX="345.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Surname" />
+                        <Text layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" />
+                        <Text layoutX="508.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number" />
+                        <Button layoutX="613.0" layoutY="60.0" mnemonicParsing="false" onAction="#filterUsers" text="Filter" />
                      </children>
                   </AnchorPane>
               </content>

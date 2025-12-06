@@ -53,5 +53,5 @@ public class User implements Serializable {
 //    }
 
     @Override
-    public String toString() { return "Name: " + name + " Surname: " + surname; }
+    public String toString() { return "Login: " + login + ", Name: " + name + ", Surname: " + surname + ", Phone Number: " + phoneNumber; }
 }
