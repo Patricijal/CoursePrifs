@@ -24,6 +24,7 @@ public class BasicUser extends User{
     protected List<Review> myReviews;
     @OneToMany(mappedBy = "feedbackUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<Review> feedback;
+    protected Integer bonusPoints;
 
     public BasicUser(String login, String password, String name, String surname, String phoneNumber, String address) {
         super(login, password, name, surname, phoneNumber);
@@ -31,5 +32,6 @@ public class BasicUser extends User{
         this.myReviews = new ArrayList<>();
         this.feedback = new ArrayList<>();
         this.myOrders = new ArrayList<>();
+        this.bonusPoints = 0;
     }
 }

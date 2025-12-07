@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -74,7 +75,7 @@ public class UserForm implements Initializable {
     private void fillUserDataForUpdate() {
         if (userForUpdate != null && isForUpdate) {
             usernameField.setText(userForUpdate.getLogin());
-            pswField.setText(userForUpdate.getPassword());
+            pswField.setText("");
             nameField.setText(userForUpdate.getName());
             surnameField.setText(userForUpdate.getSurname());
             phoneNumField.setText(userForUpdate.getPhoneNumber());
@@ -148,16 +149,20 @@ public class UserForm implements Initializable {
         if (!validateUserFields()) {
             return;
         }
+        String rawPassword = pswField.getText();
+        String hashedPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
         if (userRadio.isSelected()) {
             User user = new User(usernameField.getText(),
-                    pswField.getText(),
+//                    pswField.getText(),
+                    hashedPassword,
                     nameField.getText(),
                     surnameField.getText(),
                     phoneNumField.getText());
             genericHibernate.create(user);
         } else if (clientRadio.isSelected()) {
             BasicUser basicUser = new BasicUser(usernameField.getText(),
-                    pswField.getText(),
+//                    pswField.getText(),
+                    hashedPassword,
                     nameField.getText(),
                     surnameField.getText(),
                     phoneNumField.getText(),
@@ -165,7 +170,8 @@ public class UserForm implements Initializable {
             genericHibernate.create(basicUser);
         } else if (driverRadio.isSelected()) {
             Driver driver = new Driver(usernameField.getText(),
-                    pswField.getText(),
+//                    pswField.getText(),
+                    hashedPassword,
                     nameField.getText(),
                     surnameField.getText(),
                     phoneNumField.getText(),
@@ -176,7 +182,8 @@ public class UserForm implements Initializable {
             genericHibernate.create(driver);
         } else if (restaurantRadio.isSelected()) {
             Restaurant restaurant = new Restaurant(usernameField.getText(),
-                    pswField.getText(),
+//                    pswField.getText(),
+                    hashedPassword,
                     nameField.getText(),
                     surnameField.getText(),
                     phoneNumField.getText(),
@@ -202,7 +209,10 @@ public class UserForm implements Initializable {
         }
         // Common fields (shared by all subclasses)
         userForUpdate.setLogin(usernameField.getText());
-        userForUpdate.setPassword(pswField.getText());
+//        userForUpdate.setPassword(pswField.getText());
+        String rawPassword = pswField.getText();
+        String hashedPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
+        userForUpdate.setPassword(hashedPassword);
         userForUpdate.setName(nameField.getText());
         userForUpdate.setSurname(surnameField.getText());
         userForUpdate.setPhoneNumber(phoneNumField.getText());

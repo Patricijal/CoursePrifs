@@ -19,6 +19,6 @@
          </contextMenu></ListView>
       <TextArea fx:id="messageBody" layoutX="28.0" layoutY="214.0" prefHeight="58.0" prefWidth="422.0" promptText="Message" />
       <Button layoutX="217.0" layoutY="284.0" mnemonicParsing="false" onAction="#sendMessage" text="Send" />
-      <Button layoutX="28.0" layoutY="284.0" mnemonicParsing="false" onAction="#editMessage" text="Edit" />
+      <Button fx:id="editButton" layoutX="28.0" layoutY="284.0" mnemonicParsing="false" onAction="#editMessage" text="Edit" />
    </children>
 </AnchorPane>

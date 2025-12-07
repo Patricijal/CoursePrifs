@@ -23,10 +23,12 @@ public class Restaurant extends BasicUser {
     private List<Review> reviews;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FoodOrder> myOrders;
+    private Integer discount;
 
     public Restaurant(String login, String password, String name, String surname, String phoneNumber, String address, String workHours, Double rating) {
         super(login, password, name, surname, phoneNumber, address);
         this.workHours = workHours;
         this.rating = rating;
+        this.discount = 0;
     }
 }

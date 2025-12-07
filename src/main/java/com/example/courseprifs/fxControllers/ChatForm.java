@@ -7,6 +7,7 @@ import com.example.courseprifs.utils.FxUtils;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -16,6 +17,7 @@ import java.util.List;
 public class ChatForm {
     public ListView<Review> messageList;
     public TextArea messageBody;
+    public Button editButton;
     private EntityManagerFactory entityManagerFactory;
     private CustomHibernate customHibernate;
     private User currentUser;
@@ -26,6 +28,10 @@ public class ChatForm {
         this.currentUser = currentUser;
         this.currentFoodOrder = currentFoodOrder;
         this.customHibernate = new CustomHibernate(entityManagerFactory);
+        if (currentUser instanceof Restaurant) {
+            editButton.setDisable(true);
+            messageList.setContextMenu(null);
+        }
         loadMessages();
     }
 
@@ -42,6 +48,17 @@ public class ChatForm {
         if (messageBody.getText().isEmpty()) {
             return;
         }
+
+        if (!(currentUser instanceof BasicUser)) {
+            FxUtils.generateAlert(
+                    Alert.AlertType.ERROR,
+                    "Permission Denied",
+                    "Cannot Send Message",
+                    "Only regular users (BasicUser) can send messages."
+            );
+            return;
+        }
+
         FoodOrder foodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
 
         if (foodOrder.getChat() == null) {

@@ -72,6 +72,9 @@
                         <Label layoutX="462.0" layoutY="64.0" text="Select cuisine for order:" />
                         <Label layoutX="301.0" layoutY="64.0" text="Order details:" />
                         <Label layoutX="21.0" layoutY="6.0" text="Filters:" />
+                        <TextField fx:id="discountField" layoutX="301.0" layoutY="300.0" prefHeight="25.0" prefWidth="48.0" />
+                        <Text layoutX="301.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Discount (%) for orders:" />
+                        <Button layoutX="357.0" layoutY="300.0" mnemonicParsing="false" onAction="#setDiscount" text="Set" />
                      </children></AnchorPane>
               </content>
             </Tab>

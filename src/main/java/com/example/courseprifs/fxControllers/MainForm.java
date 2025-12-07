@@ -83,6 +83,9 @@ public class MainForm implements Initializable {
     public DatePicker filterTo;
     @FXML
     public ListView<Cuisine> cuisineList;
+
+    @FXML
+    public TextField discountField;
     //</editor-fold>
 
     //<editor-fold desc="Cuisine Management Tab Elements">
@@ -283,6 +286,27 @@ public class MainForm implements Initializable {
 
             orderRestaurantList.getItems().addAll(customHibernate.getAllRecords(Restaurant.class));
             orderStatusField.getItems().addAll(OrderStatus.values());
+
+            // --- NEW: set discountField ---
+            if (currentUser instanceof Restaurant) {
+                Restaurant restaurantUser = (Restaurant) currentUser;
+                discountField.setText(restaurantUser.getDiscount() != null ? restaurantUser.getDiscount().toString() : "0");
+                orderRestaurantList.getSelectionModel().select(restaurantUser);
+                orderRestaurantList.setDisable(true); // restaurant cannot change selection
+            } else {
+                discountField.clear();
+                orderRestaurantList.setDisable(false);
+
+                // Add listener to update discount when admin picks a restaurant
+                orderRestaurantList.setOnAction(event -> {
+                    Restaurant selected = orderRestaurantList.getSelectionModel().getSelectedItem();
+                    if (selected != null) {
+                        discountField.setText(selected.getDiscount() != null ? selected.getDiscount().toString() : "0");
+                    } else {
+                        discountField.clear();
+                    }
+                });
+            }
         } else if (cuisineTab.isSelected()) {
             clearAllCuisineFields();
             initializeCuisineFilterComponents();
@@ -304,7 +328,20 @@ public class MainForm implements Initializable {
                     .collect(Collectors.toList());
             reviewListField.getItems().addAll(filteredReviews);
 //            reviewListField.getItems().addAll(customHibernate.getAllRecords(Review.class));
-            reviewRestaurantList.getItems().addAll(customHibernate.getAllRecords(Restaurant.class));
+
+//            reviewRestaurantList.getItems().addAll(customHibernate.getAllRecords(Restaurant.class)); //buvo
+
+            if (currentUser instanceof Restaurant) {
+                reviewRestaurantList.setDisable(true);
+                // Optionally pre-select this restaurant
+                Restaurant restaurantUser = (Restaurant) currentUser;
+                reviewRestaurantList.getItems().add(restaurantUser);
+                reviewRestaurantList.getSelectionModel().select(restaurantUser);
+            } else {
+                reviewRestaurantList.setDisable(false);
+                reviewRestaurantList.getItems().addAll(customHibernate.getAllRecords(Restaurant.class));
+            }
+
         } else if (altTab.isSelected()) {
             userListField.getItems().clear();
             List<User> userList = customHibernate.getAllRecords(User.class);
@@ -673,6 +710,60 @@ public class MainForm implements Initializable {
         cuisineList.getItems().clear();
         cuisineList.getItems().addAll(customHibernate.getRestaurantCuisine(orderRestaurantList.getSelectionModel().getSelectedItem()));
     }
+
+    public void setDiscount() {
+        try {
+            Restaurant selectedRestaurant;
+
+            // If current user is a Restaurant, update their own discount
+            if (currentUser instanceof Restaurant) {
+                selectedRestaurant = (Restaurant) currentUser;
+            } else {
+                // Admin: get restaurant from ComboBox selection
+                selectedRestaurant = orderRestaurantList.getSelectionModel().getSelectedItem();
+                if (selectedRestaurant == null) {
+                    FxUtils.generateAlert(Alert.AlertType.WARNING, "No Restaurant Selected",
+                            "Please select a restaurant to set discount", null);
+                    return;
+                }
+            }
+
+            // Parse discount from text field
+            String discountText = discountField.getText();
+            int discountValue = 0;
+            if (discountText != null && !discountText.isEmpty()) {
+                try {
+                    discountValue = Integer.parseInt(discountText);
+                } catch (NumberFormatException e) {
+                    FxUtils.generateAlert(Alert.AlertType.WARNING, "Invalid Discount",
+                            "Discount must be a number", null);
+                    return;
+                }
+            }
+
+            // Check discount range
+            if (discountValue < 0 || discountValue > 100) {
+                FxUtils.generateAlert(Alert.AlertType.WARNING, "Invalid Discount",
+                        "Discount must be between 0 and 100", null);
+                return;
+            }
+
+            // Update the restaurant object
+            selectedRestaurant.setDiscount(discountValue);
+
+            // Persist to database using CustomHibernate
+            customHibernate.update(selectedRestaurant);
+
+            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Success",
+                    "Discount updated successfully for " + selectedRestaurant.getName(), null);
+
+            // Refresh field in case admin changed restaurant selection
+            discountField.setText(String.valueOf(selectedRestaurant.getDiscount()));
+
+        } catch (Exception e) {
+            FxUtils.generateExceptionAlert(Alert.AlertType.ERROR, "Error Updating Discount", e);
+        }
+    }
     //</editor-fold>
 
     //<editor-fold desc="Cuisine Management Tab Functions">
@@ -919,7 +1010,8 @@ public class MainForm implements Initializable {
     //<editor-fold desc="Review Tab Functions">
     private List<Review> getReviews() {
         if (currentUser instanceof Restaurant) {
-            return customHibernate.getFilteredReviews((Restaurant) currentUser);
+            Restaurant restaurantUser = (Restaurant) currentUser;
+            return customHibernate.getFilteredReviews(restaurantUser);
         } else {
             return customHibernate.getAllRecords(Review.class);
         }
@@ -998,7 +1090,8 @@ public class MainForm implements Initializable {
 
     private void fillReviewList() {
         reviewListField.getItems().clear();
-        List<Review> allReviews = customHibernate.getAllRecords(Review.class);
+//        List<Review> allReviews = customHibernate.getAllRecords(Review.class);
+        List<Review> allReviews = getReviews();
         List<Review> filteredReviews = allReviews.stream()
                 .filter(review -> review.getChat() == null) // Assuming Review has a 'chat' field
                 .collect(Collectors.toList());
@@ -1043,5 +1136,146 @@ public class MainForm implements Initializable {
             FxUtils.generateAlert(Alert.AlertType.ERROR, "Filter Error", "Failed to filter reviews", e.getMessage());
         }
     }
+
+
+
+
+
+//    private void initializeReviewTab() {
+//        reviewListField.getItems().clear();
+//        reviewRestaurantList.getItems().clear();
+//
+//        if (currentUser instanceof Restaurant restaurant) {
+//            // Load only this restaurant's reviews
+//            List<Review> restaurantReviews = customHibernate.getFilteredReviews(restaurant);
+//            reviewListField.getItems().addAll(restaurantReviews);
+//
+//            // Disable selection and pre-select this restaurant
+//            reviewRestaurantList.setDisable(true);
+//            reviewRestaurantList.getItems().add(restaurant);
+//            reviewRestaurantList.getSelectionModel().select(restaurant);
+//
+//        } else {
+//            // Load all reviews
+//            List<Review> allReviews = getReviews();
+//            reviewListField.getItems().addAll(allReviews);
+//
+//            // Enable selection and populate all restaurants
+//            reviewRestaurantList.setDisable(false);
+//            reviewRestaurantList.getItems().addAll(customHibernate.getAllRecords(Restaurant.class));
+//        }
+//    }
+//
+//    private List<Review> getReviews() {
+//        // Only non-chat reviews
+//        return customHibernate.getAllRecords(Review.class).stream()
+//                .filter(review -> review.getChat() == null && review.getRestaurant() != null)
+//                .toList();
+//    }
+//
+//    public void addReview() {
+//        if (!validateReviewFields()) return;
+//
+//        if (!isIntegerNumeric(reviewRatingField.getText())) return;
+//
+//        Review review = new Review(
+//                Integer.parseInt(reviewRatingField.getText()),
+//                reviewCommentField.getText(),
+//                (BasicUser) currentUser,
+//                reviewRestaurantList.getValue()
+//        );
+//
+//        customHibernate.create(review);
+//
+//        // Reload reviews depending on user type
+//        if (currentUser instanceof Restaurant restaurant) {
+//            fillReviewList(customHibernate.getFilteredReviews(restaurant));
+//        } else {
+//            fillReviewList(getReviews());
+//        }
+//    }
+//
+//    public void updateReview() {
+//        if (!validateReviewFields()) return;
+//
+//        Review review = reviewListField.getSelectionModel().getSelectedItem();
+//        if (review == null) {
+//            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "Update Review", "No review selected");
+//            return;
+//        }
+//
+//        review.setRating(Integer.parseInt(reviewRatingField.getText()));
+//        review.setText(reviewCommentField.getText());
+//        review.setRestaurant(reviewRestaurantList.getSelectionModel().getSelectedItem());
+//
+//        customHibernate.update(review);
+//
+//        if (currentUser instanceof Restaurant restaurant) {
+//            fillReviewList(customHibernate.getFilteredReviews(restaurant));
+//        } else {
+//            fillReviewList(getReviews());
+//        }
+//    }
+//
+//    public void deleteReview() {
+//        Review selectedReview = reviewListField.getSelectionModel().getSelectedItem();
+//        if (selectedReview == null) {
+//            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "Delete Review", "No review selected");
+//            return;
+//        }
+//        customHibernate.delete(Review.class, selectedReview.getId());
+//
+//        if (currentUser instanceof Restaurant restaurant) {
+//            fillReviewList(customHibernate.getFilteredReviews(restaurant));
+//        } else {
+//            fillReviewList(getReviews());
+//        }
+//    }
+//
+//    private boolean validateReviewFields() {
+//        if (reviewRatingField.getText() == null || reviewRatingField.getText().trim().isEmpty()) {
+//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Rating Missing", "Please enter a rating.");
+//            return false;
+//        }
+//        if (!isIntegerNumeric(reviewRatingField.getText())) {
+//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Rating", "Please enter a valid numeric rating (1-5).");
+//            return false;
+//        }
+//        // Check if rating is between 1 and 5
+//        try {
+//            int rating = Integer.parseInt(reviewRatingField.getText());
+//            if (rating < 1 || rating > 5) {
+//                FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Rating", "Rating must be between 1 and 5.");
+//                return false;
+//            }
+//        } catch (NumberFormatException e) {
+//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Rating", "Please enter a valid numeric rating.");
+//            return false;
+//        }
+//        if (reviewCommentField.getText() == null || reviewCommentField.getText().trim().isEmpty()) {
+//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Comment Missing", "Please enter a review comment.");
+//            return false;
+//        }
+//        if (reviewRestaurantList.getSelectionModel().getSelectedItem() == null) {
+//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Restaurant Not Selected", "Please select a restaurant for the review.");
+//            return false;
+//        }
+//        return true; // All validations passed
+//    }
+//
+//    private boolean isIntegerNumeric(String text) {
+//        try {
+//            Integer.parseInt(text);
+//            return true;
+//        }  catch (NumberFormatException e) {
+//            return false;
+//        }
+//    }
+//
+//    // Fill the list with a provided list of reviews
+//    private void fillReviewList(List<Review> reviews) {
+//        reviewListField.getItems().clear();
+//        reviewListField.getItems().addAll(reviews);
+//    }
     //</editor-fold>
 }

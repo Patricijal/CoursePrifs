@@ -13,6 +13,7 @@ module com.example.courseprifs {
     requires org.kordamp.bootstrapfx.core;
     requires java.desktop;
     requires javafx.graphics;
+    requires spring.security.crypto;
 
     opens com.example.courseprifs to javafx.fxml, org.hibernate.orm.core, jakarta.persistence;
     exports com.example.courseprifs;

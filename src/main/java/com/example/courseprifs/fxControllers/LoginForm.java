@@ -31,7 +31,7 @@ public class LoginForm {
 
     @FXML
     public void initialize() {
-        registerButton.setVisible(false);
+        registerButton.setVisible(true);
     }
 
     public void validateAndLogin() throws IOException {
