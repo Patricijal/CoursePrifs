@@ -21,26 +21,6 @@ public class CustomHibernate extends GenericHibernate {
         super(entityManagerFactory);
     }
 
-//    public User getUserByCredentials(String username, String password) {
-//        User user = null;
-//        try {
-//            entityManager = entityManagerFactory.createEntityManager();
-//            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//            CriteriaQuery<User> query = cb.createQuery(User.class);
-//            Root<User> root = query.from(User.class);
-//
-//            query.select(root).where(cb.and(
-//                    cb.equal(root.get("login"), username),
-//                    cb.equal(root.get("password"), password)
-//            ));
-//            Query q = entityManager.createQuery(query);
-//            user = (User) q.getSingleResult();
-//        } catch (Exception e) {
-//            // Handle exception (e.g., user not found)
-//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Oh no", "DB error", "Something went wrong getting User by credentials");
-//        }
-//        return user;
-//    }
     public User getUserByCredentials(String username, String rawPassword) {
         User user = null;
         try {
@@ -65,18 +45,6 @@ public class CustomHibernate extends GenericHibernate {
             if (entityManager != null) entityManager.close();
         }
         return user;
-    }
-
-    public void createUser(User user) {
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(hashedPassword);
-        create(user); // reuse your GenericHibernate create method
-    }
-
-    public void updateUserPassword(User user, String newPassword) {
-        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-        user.setPassword(hashedPassword);
-        update(user); // reuse your GenericHibernate update method
     }
 
     public List<FoodOrder> getRestaurantOrders(Restaurant restaurant) {
@@ -136,13 +104,6 @@ public class CustomHibernate extends GenericHibernate {
             // Order by date (most recent first)
             query.orderBy(cb.desc(root.get("dateCreated")));
             TypedQuery<FoodOrder> q = entityManager.createQuery(query);
-//            // cia bus Predicates
-//            if (restaurant != null) {
-//                query.select(root).where(cb.equal(root.get("restaurant"), restaurant));
-//            } else {
-//                query.select(root).where(cb.equal(root.get("restaurant"), restaurant));
-//            }
-//            Query q = entityManager.createQuery(query);
             orders = q.getResultList();
         } catch (Exception e) {
             // Handle exception (e.g., user not found)

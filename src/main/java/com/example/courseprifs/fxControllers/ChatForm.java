@@ -106,27 +106,3 @@ public class ChatForm {
         }
     }
 }
-
-//        if (currentFoodOrder.getChat() == null) {
-//Chat chat = new Chat("Chat no " + currentFoodOrder.getName(), currentFoodOrder);
-//            customHibernate.create(chat);
-//        }
-//FoodOrder foodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
-//Review message = new Review(messageBody.getText(),
-//        (BasicUser) currentUser,
-//        foodOrder.getChat());
-//        customHibernate.create(message);
-
-
-//        FoodOrder managedFoodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
-//        if (managedFoodOrder.getChat() == null) {
-//            Chat chat = new Chat("Chat no " + managedFoodOrder.getName(), managedFoodOrder);
-//            customHibernate.create(chat);
-//        }
-//        User managedUser = customHibernate.getEntityById(User.class, currentUser.getId());
-//        managedFoodOrder = customHibernate.getEntityById(FoodOrder.class, currentFoodOrder.getId());
-//        Review message = new Review(messageBody.getText(),
-//                (BasicUser) managedUser,
-//                managedFoodOrder.getChat());
-//        customHibernate.create(message);
-//        messageBody.clear();

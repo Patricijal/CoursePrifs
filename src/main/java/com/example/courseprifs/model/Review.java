@@ -31,11 +31,6 @@ public class Review {
     @ManyToOne
     private Chat chat;
 
-//    public Review(int rating, String text) {
-//        this.rating = rating;
-//        this.text = text;
-//    }
-
     public Review(String text, BasicUser commentOwner, Chat chat) {
         this.text = text;
         this.commentOwner = commentOwner;
@@ -48,11 +43,6 @@ public class Review {
         this.commentOwner = commentOwner;
         this.restaurant = restaurant;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Rating: " + rating + " | Text: " + text;
-//    }
 
     @Override
     public String toString() {

@@ -37,21 +37,6 @@ public class User implements Serializable {
         this.dateCreated = LocalDateTime.now();
     }
 
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "id=" + id +
-//                ", login='" + login + '\'' +
-//                ", password='" + password + '\'' +
-//                ", name='" + name + '\'' +
-//                ", surname='" + surname + '\'' +
-//                ", phoneNumber='" + phoneNumber + '\'' +
-//                ", dateCreated=" + dateCreated +
-//                ", dateUpdated=" + dateUpdated +
-//                ", isAdmin=" + isAdmin +
-//                '}';
-//    }
-
     @Override
     public String toString() { return "Login: " + login + ", Name: " + name + ", Surname: " + surname + ", Phone Number: " + phoneNumber; }
 }

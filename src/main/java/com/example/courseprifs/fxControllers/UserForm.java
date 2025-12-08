@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class UserForm implements Initializable {
@@ -158,6 +159,7 @@ public class UserForm implements Initializable {
                     nameField.getText(),
                     surnameField.getText(),
                     phoneNumField.getText());
+            user.setAdmin(true);
             genericHibernate.create(user);
         } else if (clientRadio.isSelected()) {
             BasicUser basicUser = new BasicUser(usernameField.getText(),
@@ -216,6 +218,7 @@ public class UserForm implements Initializable {
         userForUpdate.setName(nameField.getText());
         userForUpdate.setSurname(surnameField.getText());
         userForUpdate.setPhoneNumber(phoneNumField.getText());
+        userForUpdate.setDateUpdated(LocalDateTime.now());
 
         // Type-specific fields
         if (userForUpdate instanceof BasicUser basicUser) {
@@ -235,7 +238,7 @@ public class UserForm implements Initializable {
             try {
                 restaurant.setRating(Double.parseDouble(ratingField.getText()));
             } catch (NumberFormatException e) {
-                restaurant.setRating(0.0); // default if invalid input
+                restaurant.setRating(0.0);
             }
         }
 
@@ -280,12 +283,6 @@ public class UserForm implements Initializable {
             FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Phone Number Missing", "Please enter a phone number.");
             return false;
         }
-
-//        // Phone number format validation (basic)
-//        if (!phoneNumField.getText().matches("\\+?[0-9\\s-()]+")) {
-//            FxUtils.generateAlert(Alert.AlertType.WARNING, "Validation Error", "Invalid Phone Number", "Please enter a valid phone number.");
-//            return false;
-//        }
 
         // User type selection validation
         if (!userRadio.isSelected() && !clientRadio.isSelected() && !driverRadio.isSelected() && !restaurantRadio.isSelected()) {
